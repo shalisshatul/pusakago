@@ -59,22 +59,40 @@ $routes->post('buku/update/(:num)', 'Buku::update/$1', ['filter' => 'role:admin,
 
 // ❌ Hapus buku (ADMIN & PETUGAS)
 $routes->get('buku/delete/(:num)', 'Buku::delete/$1', ['filter' => 'role:admin,petugas']);
-// 📦 PEMINJAMAN
-// ➕ Pinjam buku (anggota)
-$routes->get('peminjaman/pinjam/(:num)', 'Peminjaman::pinjam/$1', [
-    'filter' => 'role:anggota'
-]);
-// 🛒 Keranjang peminjaman (anggota)
-$routes->get('peminjaman/keranjang', 'Peminjaman::keranjang', [
-    'filter' => 'role:anggota'
-]);
-// 📋 List semua peminjaman (admin & petugas)
-$routes->get('peminjaman', 'Peminjaman::index', [
-    'filter' => 'role:admin,petugas'
-]);
-// ✅ Konfirmasi peminjaman (admin & petugas)
-$routes->get('peminjaman/konfirmasi/(:num)', 'Peminjaman::konfirmasi/$1', [
-    'filter' => 'role:admin,petugas']);
-// 🔁 Pengembalian buku (admin & petugas)
-$routes->get('peminjaman/kembalikan/(:num)', 'Peminjaman::kembalikan/$1', [
-  'filter' => 'role:admin,petugas']);
+//kategori
+$routes->get('kategori', 'Kategori::index');
+$routes->get('kategori/create', 'Kategori::create');
+$routes->post('kategori/store', 'Kategori::store');
+$routes->get('kategori/edit/(:num)', 'Kategori::edit/$1');
+$routes->post('kategori/update/(:num)', 'Kategori::update/$1');
+$routes->get('kategori/delete/(:num)', 'Kategori::delete/$1',['filter' => 'role:admin,petugas']);
+//penulis
+$routes->get('penulis', 'Penulis::index');
+$routes->get('penulis/create', 'Penulis::create');
+$routes->post('penulis/store', 'Penulis::store');
+$routes->get('penulis/edit/(:num)', 'Penulis::edit/$1');
+$routes->post('penulis/update/(:num)', 'Penulis::update/$1');
+$routes->get('penulis/delete/(:num)', 'Penulis::delete/$1');
+//penerbit
+$routes->get('penerbit', 'Penerbit::index');
+$routes->get('penerbit/create', 'Penerbit::create');
+$routes->post('penerbit/store', 'Penerbit::store');
+$routes->get('penerbit/edit/(:num)', 'Penerbit::edit/$1');
+$routes->post('penerbit/update/(:num)', 'Penerbit::update/$1');
+$routes->get('penerbit/delete/(:num)', 'Penerbit::delete/$1');
+//rak
+$routes->get('rak', 'Rak::index');
+$routes->get('rak/create', 'Rak::create');
+$routes->post('rak/store', 'Rak::store');
+$routes->get('rak/edit/(:num)', 'Rak::edit/$1');
+$routes->post('rak/update/(:num)', 'Rak::update/$1');
+$routes->get('rak/delete/(:num)', 'Rak::delete/$1');
+// ================= PEMINJAMAN =================
+$routes->get('/peminjaman', 'Peminjaman::index');
+$routes->get('/pinjam/(:num)', 'Peminjaman::pinjam/$1');
+$routes->get('/peminjaman/ajukan', 'Peminjaman::ajukan');
+$routes->get('/peminjaman-saya', 'Peminjaman::peminjamanSaya');
+
+// ================= ADMIN =================
+$routes->get('/peminjaman/admin', 'Peminjaman::admin');
+$routes->get('/peminjaman/selesai/(:num)', 'Peminjaman::selesai/$1');

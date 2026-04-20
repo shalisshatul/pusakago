@@ -59,8 +59,12 @@
 
 <input type="text" name="rak_baru" placeholder="Atau tambah rak baru"><br><br>
 
-<input type="text" name="rak_baru" placeholder="Atau tambah rak baru (isi jika tidak ada)"><br><br>
-    Deskripsi:<br>
+Jumlah:<br>
+    <input type="number" name="jumlah"><br><br>
+
+    Tersedia:<br>
+    <input type="number" name="tersedia"><br><br>
+Deskripsi:<br>
     <textarea name="deskripsi"></textarea><br><br>
 
     Cover:<br>

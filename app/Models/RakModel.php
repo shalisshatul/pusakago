@@ -8,5 +8,10 @@ class RakModel extends Model
 {
     protected $table = 'rak';
     protected $primaryKey = 'id_rak';
-    protected $allowedFields = ['nama_rak', 'lokasi'];
+
+    protected $allowedFields = [
+        'nama_rak',
+        'lokasi',
+        'is_deleted'
+    ];
 }

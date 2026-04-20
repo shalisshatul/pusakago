@@ -9,6 +9,8 @@
 <p><b>Penulis:</b> <?= $buku['nama_penulis'] ?></p>
 <p><b>Penerbit:</b> <?= $buku['nama_penerbit'] ?></p>
 <p><b>Rak:</b> <?= $buku['nama_rak'] ?? '-' ?></p>
+<p><b>jumlah</b> <?= $buku['jumlah'] ?></p>
+<p><b>tersedia:</b> <?= $buku['tersedia'] ?></p>
 <p><b>Tahun:</b> <?= $buku['tahun_terbit'] ?></p>
 <p><b>Deskripsi:</b> <?= $buku['deskripsi'] ?></p>
 
