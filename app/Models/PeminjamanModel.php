@@ -13,6 +13,9 @@ class PeminjamanModel extends Model
         'tanggal_pinjam',
         'tanggal_kembali',
         'status',
-        'id'
+        'id',
+        'id_buku',
+        'metode'
     ];
+    
 }

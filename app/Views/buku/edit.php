@@ -3,7 +3,6 @@
 
 <h2>Edit Buku</h2>
 
-<!-- ✅ ERROR MESSAGE -->
 <?php if (session()->getFlashdata('error')): ?>
     <div style="color:red;">
         <?= session()->getFlashdata('error'); ?>
@@ -12,13 +11,15 @@
 
 <form action="<?= base_url('buku/update/' . $buku['id_buku']) ?>" method="post" enctype="multipart/form-data">
 
+    <!-- JUDUL -->
     Judul:<br>
     <input type="text" name="judul" value="<?= $buku['judul'] ?>" required><br><br>
 
+    <!-- ISBN (FIX: tampilkan value lama) -->
     ISBN:<br>
     <input type="text" name="isbn" value="<?= $buku['isbn'] ?>"><br><br>
 
-    <!-- ✅ KATEGORI -->
+    <!-- KATEGORI -->
     Kategori:<br>
     <select name="id_kategori">
         <option value="">-- Pilih Kategori --</option>
@@ -31,7 +32,7 @@
     </select><br>
     <input type="text" name="kategori_baru" placeholder="Atau tambah kategori baru"><br><br>
 
-    <!-- ✅ PENULIS -->
+    <!-- PENULIS -->
     Penulis:<br>
     <select name="id_penulis">
         <option value="">-- Pilih Penulis --</option>
@@ -44,7 +45,7 @@
     </select><br>
     <input type="text" name="penulis_baru" placeholder="Atau tambah penulis baru"><br><br>
 
-    <!-- ✅ PENERBIT -->
+    <!-- PENERBIT -->
     Penerbit:<br>
     <select name="id_penerbit">
         <option value="">-- Pilih Penerbit --</option>
@@ -57,7 +58,7 @@
     </select><br>
     <input type="text" name="penerbit_baru" placeholder="Atau tambah penerbit baru"><br><br>
 
-    <!-- ✅ RAK -->
+    <!-- RAK -->
     Rak:<br>
     <select name="id_rak">
         <option value="">Pilih Rak</option>
@@ -69,21 +70,30 @@
     </select><br>
     <input type="text" name="rak_baru" placeholder="Atau tambah rak baru"><br><br>
 
-    Tahun:<br>
+    <!-- TAHUN -->
+    Tahun Terbit:<br>
     <input type="number" name="tahun_terbit" value="<?= $buku['tahun_terbit'] ?>"><br><br>
 
-    Jumlah:<br>
-    <input type="number" name="jumlah" value="<?= $buku['jumlah'] ?>"><br><br>
-
-    Tersedia:<br>
-    <input type="number" name="tersedia" value="<?= $buku['tersedia'] ?>"><br><br>
-
+    <!-- DESKRIPSI (FIX: tampilkan value lama) -->
     Deskripsi:<br>
     <textarea name="deskripsi"><?= $buku['deskripsi'] ?></textarea><br><br>
 
+    <!-- JUMLAH -->
+    Jumlah:<br>
+    <input type="number" name="jumlah" value="<?= $buku['jumlah'] ?>"><br><br>
+
+    <!-- TERSEDIA -->
+    Tersedia:<br>
+    <input type="number" name="tersedia" value="<?= $buku['tersedia'] ?>"><br><br>
+
+    <!-- COVER -->
+    <input type="hidden" name="old_cover" value="<?= $buku['cover'] ?>">
+
     Cover Lama:<br>
-    <?php if ($buku['cover']) : ?>
+    <?php if (!empty($buku['cover'])) : ?>
         <img src="<?= base_url('uploads/' . $buku['cover']) ?>" width="80"><br>
+    <?php else : ?>
+        Tidak ada<br>
     <?php endif; ?>
 
     Ganti Cover:<br>

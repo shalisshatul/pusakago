@@ -43,13 +43,12 @@
             <td><?= $b['tersedia'] ?? 0 ?></td>
 
             <td>
-                <?php if (!empty($b['cover'])) : ?>
-                    <img src="<?= base_url('uploads/' . $b['cover']) ?>" width="60">
-                <?php else : ?>
-                    Tidak ada
-                <?php endif; ?>
-            </td>
-
+    <?php if (!empty($b['cover']) && file_exists(FCPATH . 'uploads/' . $b['cover'])) : ?>
+        <img src="<?= base_url('uploads/' . $b['cover']) ?>" width="60">
+    <?php else : ?>
+        <span>Tidak ada</span>
+    <?php endif; ?>
+</td>
             <td>
                 <!-- 👤 ANGGOTA -->
                 <?php if (session()->get('role') == 'anggota') : ?>

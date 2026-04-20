@@ -19,6 +19,11 @@ class Rak extends BaseController
     
         return view('rak/index', $data);
     }
+    public function create()
+{
+    return view('rak/create');
+}
+
     public function store()
     {
         $model = new RakModel();

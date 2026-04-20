@@ -14,6 +14,7 @@
 <a href="<?= base_url('buku') ?>">Buku</a><br>
 
 <a href="<?= base_url('peminjaman') ?>">peminjaman</a><br>
+<a href="<?= base_url('pengembalian') ?>">pengembalian</a><br>
 <a href="<?= base_url('kategori') ?>">Kategori</a><br>
 <a href="<?= base_url('penulis') ?>">Penulis</a><br>
 <a href="<?= base_url('penerbit') ?>">Penerbit</a><br>
