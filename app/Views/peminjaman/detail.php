@@ -11,6 +11,9 @@
 
 
 <a href="<?= base_url('peminjaman') ?>">Kembali</a>
-<a href="<?= base_url('peminjaman/print?' . http_build_query($_GET)) ?>" target="_blank">
-Print </a>
+<a href="<?= base_url('peminjaman/print/'.$peminjaman['id_peminjaman']) ?>" target="_blank">
+    Print
+</a>
+
+
 <?= $this->endSection() ?>

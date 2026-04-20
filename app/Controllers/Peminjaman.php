@@ -119,14 +119,43 @@ class Peminjaman extends BaseController
     // KEMBALIKAN
     public function kembalikan($id)
     {
-        $this->peminjaman->update($id, [
-            'status' => 'dikembalikan',
-            'tanggal_kembali' => date('Y-m-d')
+        $peminjamanModel = new \App\Models\PeminjamanModel();
+        $pengembalianModel = new \App\Models\PengembalianModel();
+    
+        $peminjaman = $peminjamanModel->find($id);
+    
+        $tanggal_pinjam = $peminjaman['tanggal_pinjam'];
+        $tanggal_kembali = date('Y-m-d');
+    
+        // ✅ CEGAH TANGGAL TERBALIK
+        if (strtotime($tanggal_kembali) < strtotime($tanggal_pinjam)) {
+            $tanggal_kembali = $tanggal_pinjam;
+        }
+    
+        // hitung selisih hari
+        $selisih = (strtotime($tanggal_kembali) - strtotime($tanggal_pinjam)) / (60 * 60 * 24);
+    
+        $denda = 0;
+        if ($selisih > 5) {
+            $denda = ($selisih - 5) * 1000;
+        }
+    
+        // simpan pengembalian
+        $pengembalianModel->save([
+            'id_peminjaman'        => $id,
+            'tanggal_dikembalikan' => $tanggal_kembali,
+            'denda'                => $denda
         ]);
-
-        return redirect()->to('/peminjaman');
+    
+        // update peminjaman
+        $peminjamanModel->update($id, [
+            'status' => 'dikembalikan',
+            'tanggal_kembali' => $tanggal_kembali
+        ]);
+    
+        return redirect()->to('/pengembalian');
     }
-
+    
     // DETAIL
     public function detail($id)
     {
@@ -154,5 +183,30 @@ class Peminjaman extends BaseController
         $this->peminjaman->delete($id);
 
         return redirect()->to('/peminjaman');
+ 
     }
+    public function print($id)
+{
+    $db = \Config\Database::connect();
+    $builder = $db->table('peminjaman');
+
+    $builder->select('
+        peminjaman.*,
+        users.nama,
+        buku.judul,
+        pengiriman.alamat,
+        pengiriman.status as status_pengiriman
+    ');
+
+    $builder->join('users', 'users.id = peminjaman.id');
+    $builder->join('buku', 'buku.id_buku = peminjaman.id_buku');
+    $builder->join('pengiriman', 'pengiriman.id_peminjaman = peminjaman.id_peminjaman', 'left');
+
+    $builder->where('peminjaman.id_peminjaman', $id);
+
+    $data['peminjaman'] = $builder->get()->getRowArray();
+
+    return view('peminjaman/print', $data);
+}
+
 }

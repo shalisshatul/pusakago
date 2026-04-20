@@ -98,14 +98,18 @@ $routes->post('peminjaman/update/(:num)', 'Peminjaman::update/$1');
 $routes->get('peminjaman/kembalikan/(:num)', 'Peminjaman::kembalikan/$1');
 $routes->get('peminjaman/delete/(:num)', 'Peminjaman::delete/$1');
 $routes->get('peminjaman/detail/(:num)', 'Peminjaman::detail/$1');
+$routes->get('peminjaman/print/(:num)', 'Peminjaman::print/$1');
+
 
 // pengembalian
+
 $routes->get('/pengembalian', 'Pengembalian::index');
 $routes->get('/pengembalian/create', 'Pengembalian::create');
 $routes->post('/pengembalian/store', 'Pengembalian::store');
 $routes->get('/pengembalian/edit/(:num)', 'Pengembalian::edit/$1');
 $routes->post('/pengembalian/update/(:num)', 'Pengembalian::update/$1');
-$routes->get('/pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
+$routes->get('pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
+
 //pengirima
 $routes->get('/pengiriman/antar/(:num)', 'Pengiriman::antar/$1');
 $routes->get('/pengiriman/sampai/(:num)', 'Pengiriman::sampai/$1');
