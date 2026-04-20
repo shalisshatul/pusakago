@@ -56,10 +56,7 @@
 
                     <a href="<?= base_url('buku/detail/' . $b['id_buku']) ?>">Detail</a> |
                     
-                    <a href="<?= base_url('pinjam/' . $b['id_buku']) ?>">
-                        Pinjam
-                    </a>
-
+            
                 <?php endif; ?>
 
                 <!-- 👨‍💼 ADMIN & PETUGAS -->

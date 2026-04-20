@@ -87,12 +87,12 @@ $routes->post('rak/store', 'Rak::store');
 $routes->get('rak/edit/(:num)', 'Rak::edit/$1');
 $routes->post('rak/update/(:num)', 'Rak::update/$1');
 $routes->get('rak/delete/(:num)', 'Rak::delete/$1');
-// ================= PEMINJAMAN =================
-$routes->get('/peminjaman', 'Peminjaman::index');
-$routes->get('/pinjam/(:num)', 'Peminjaman::pinjam/$1');
-$routes->get('/peminjaman/ajukan', 'Peminjaman::ajukan');
-$routes->get('/peminjaman-saya', 'Peminjaman::peminjamanSaya');
+ //
+ $routes->get('peminjaman', 'Peminjaman::index');
+$routes->get('peminjaman/create', 'Peminjaman::create');
+$routes->post('peminjaman/store', 'Peminjaman::store');
 
-// ================= ADMIN =================
-$routes->get('/peminjaman/admin', 'Peminjaman::admin');
-$routes->get('/peminjaman/selesai/(:num)', 'Peminjaman::selesai/$1');
+$routes->post('peminjaman/update/(:num)', 'Peminjaman::update/$1');
+$routes->get('peminjaman/kembalikan/(:num)', 'Peminjaman::kembalikan/$1');
+$routes->get('peminjaman/delete/(:num)', 'Peminjaman::delete/$1');
+$routes->get('peminjaman/detail/(:num)', 'Peminjaman::detail/$1');

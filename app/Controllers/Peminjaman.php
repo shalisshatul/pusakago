@@ -1,99 +1,93 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\PeminjamanModel;
-use App\Models\DetailPeminjamanModel;
 
 class Peminjaman extends BaseController
 {
     protected $peminjaman;
-    protected $detail;
 
     public function __construct()
     {
         $this->peminjaman = new PeminjamanModel();
-        $this->detail = new DetailPeminjamanModel();
     }
 
-    // ================== INDEX (SEMUA DI SINI) ==================
+    // READ (tampilan data)
     public function index()
     {
-        $keyword = $this->request->getGet('keyword');
-        $idUser  = session()->get('id');
-        $role    = session()->get('role');
-
-        // default biar tidak undefined
-        $data['peminjaman'] = [];
-        $data['keranjang']  = [];
-
-        if ($role == 'admin' || $role == 'petugas') {
-            // ADMIN
-            $data['peminjaman'] = $this->peminjaman->search($keyword);
-        } else {
-            // ANGGOTA → peminjaman
-            $data['peminjaman'] = $this->peminjaman
-                ->where('id', $idUser)
-                ->where('status !=', 'keranjang')
-                ->findAll();
-
-            // ANGGOTA → keranjang
-            $data['keranjang'] = $this->detail->getKeranjang($idUser);
-        }
-
+        $db = \Config\Database::connect();
+    
+        $builder = $db->table('peminjaman');
+    
+        $builder->select('peminjaman.*, users.nama');
+        $builder->join('users', 'users.id = peminjaman.id');
+    
+        $data['peminjaman'] = $builder->get()->getResultArray();
+    
         return view('peminjaman/index', $data);
     }
+    // CREATE (form tambah)
+    public function create()
+{
+    $bukuModel = new \App\Models\BukuModel();
 
-    // ================== PINJAM ==================
-    public function pinjam($id_buku)
+    $data['buku'] = $bukuModel->findAll();
+
+    return view('peminjaman/create', $data);
+}
+
+    // STORE (simpan data)
+    public function store()
+{
+    $this->peminjaman->save([
+        'tanggal_pinjam' => date('Y-m-d'),
+        'tanggal_kembali' => null,
+        'status' => 'dipinjam',
+        'id' => session()->get('id'),
+        'id_buku' => $this->request->getPost('id_buku')
+    ]);
+
+    return redirect()->to('/peminjaman');
+}
+
+    
+    // UPDATE
+    public function update($id)
     {
-        $idUser = session()->get('id');
-
-        $cek = $this->peminjaman
-            ->where('id', $idUser)
-            ->where('status', 'keranjang')
-            ->first();
-
-        if (!$cek) {
-            $id_peminjaman = $this->peminjaman->insert([
-                'tanggal_pinjam' => date('Y-m-d'),
-                'status' => 'keranjang',
-                'id' => $idUser
-            ]);
-        } else {
-            $id_peminjaman = $cek['id_peminjaman'];
-        }
-
-        $this->detail->insert([
-            'id_peminjaman' => $id_peminjaman,
-            'id_buku' => $id_buku,
-            'jumlah' => 1
+        $this->peminjaman->update($id, [
+            'tanggal_pinjam'  => $this->request->getPost('tanggal_pinjam'),
+            'tanggal_kembali' => $this->request->getPost('tanggal_kembali'),
+            'status'          => $this->request->getPost('status'),
+            'id'              => $this->request->getPost('id')
         ]);
 
         return redirect()->to('/peminjaman');
     }
-
-    // ================== AJUKAN ==================
-    public function ajukan()
-    {
-        $idUser = session()->get('id');
-
-        $this->peminjaman
-            ->where('id', $idUser)
-            ->where('status', 'keranjang')
-            ->set(['status' => 'dipinjam'])
-            ->update();
-
-        return redirect()->to('/peminjaman');
-    }
-
-    // ================== SELESAI ==================
-    public function selesai($id)
+    public function kembalikan($id)
     {
         $this->peminjaman->update($id, [
             'status' => 'dikembalikan',
             'tanggal_kembali' => date('Y-m-d')
         ]);
+    
+        return redirect()->to('/peminjaman');
+    }
+    public function detail($id)
+{
+    $data['peminjaman'] = $this->peminjaman->find($id);
 
+    return view('peminjaman/detail', $data);
+}
+    // DELETE
+    public function delete($id)
+    {
+        if (session()->get('role') != 'admin') {
+            return redirect()->to('/peminjaman')->with('error', 'Tidak diizinkan');
+        }
+    
+        $this->peminjaman->delete($id);
+    
         return redirect()->to('/peminjaman');
     }
 }

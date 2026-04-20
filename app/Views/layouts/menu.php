@@ -12,12 +12,8 @@
 <a href="<?= base_url('users/edit/' . $idu) ?>">Setting</a><br>
 
 <a href="<?= base_url('buku') ?>">Buku</a><br>
-<li>
-    <a href="<?= base_url('peminjaman') ?>">Peminjaman</a>
-</li>
-<li>
-    <a href="<?= base_url('peminjaman/keranjang') ?>">keranjang</a>
-</li>
+
+<a href="<?= base_url('peminjaman') ?>">peminjaman</a><br>
 <a href="<?= base_url('kategori') ?>">Kategori</a><br>
 <a href="<?= base_url('penulis') ?>">Penulis</a><br>
 <a href="<?= base_url('penerbit') ?>">Penerbit</a><br>
