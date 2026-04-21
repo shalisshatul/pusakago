@@ -5,7 +5,7 @@
 
 <table border="1" cellpadding="8">
     <tr>
-        <th>ID</th>
+     
         <th>Nama Peminjam</th>
         <th>Tanggal Pinjam</th>
         <th>Tenggat</th>
@@ -17,7 +17,7 @@
     <?php if (!empty($pengembalian)): ?>
         <?php foreach ($pengembalian as $p): ?>
             <tr>
-                <td><?= $p['id_pengembalian'] ?></td>
+                
                 <td><?= $p['nama'] ?></td>
                 <td><?= $p['tanggal_pinjam'] ?></td>
                 <td><?= $p['tanggal_kembali'] ?></td>

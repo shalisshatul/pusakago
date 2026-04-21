@@ -104,8 +104,9 @@ $routes->get('peminjaman/tolak/(:num)', 'Peminjaman::tolak/$1');
 
 
 //pengirima
-$routes->get('/pengiriman/antar/(:num)', 'Pengiriman::antar/$1');
-$routes->get('/pengiriman/sampai/(:num)', 'Pengiriman::sampai/$1');
+$routes->get('pengiriman/antar/(:num)', 'Pengiriman::antar/$1');
+$routes->get('pengiriman/sampai/(:num)', 'Pengiriman::sampai/$1');
+
 //
 $routes->get('/backup', 'Backup::index');
 //
