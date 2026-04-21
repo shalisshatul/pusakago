@@ -66,7 +66,7 @@ $routes->get('kategori/create', 'Kategori::create');
 $routes->post('kategori/store', 'Kategori::store');
 $routes->get('kategori/edit/(:num)', 'Kategori::edit/$1');
 $routes->post('kategori/update/(:num)', 'Kategori::update/$1');
-$routes->get('kategori/delete/(:num)', 'Kategori::delete/$1',['filter' => 'role:admin,petugas']);
+$routes->get('kategori/delete/(:num)', 'Kategori::delete/$1', ['filter' => 'role:admin,petugas']);
 //penulis
 $routes->get('penulis', 'Penulis::index');
 $routes->get('penulis/create', 'Penulis::create');
@@ -88,7 +88,7 @@ $routes->post('rak/store', 'Rak::store');
 $routes->get('rak/edit/(:num)', 'Rak::edit/$1');
 $routes->post('rak/update/(:num)', 'Rak::update/$1');
 $routes->get('rak/delete/(:num)', 'Rak::delete/$1');
- // PEMINJAMAN
+// PEMINJAMAN
 $routes->get('peminjaman', 'Peminjaman::index');
 $routes->get('peminjaman/create', 'Peminjaman::create');
 $routes->post('peminjaman/store', 'Peminjaman::store');
@@ -114,11 +114,6 @@ $routes->post('/restore/auth', 'Restore::auth');
 $routes->get('/restore/form', 'Restore::form');
 $routes->post('/restore/process', 'Restore::process');
 //pengembalian
+$routes->get('pengembalian/create/(:num)', 'Pengembalian::create/$1');
+$routes->post('pengembalian/store', 'Pengembalian::store');
 $routes->get('pengembalian', 'Pengembalian::index');
-
-
-$routes->get('/pengembalian/create', 'Pengembalian::create');
-$routes->post('/pengembalian/store', 'Pengembalian::store');
-$routes->get('/pengembalian/edit/(:num)', 'Pengembalian::edit/$1');
-$routes->post('/pengembalian/update/(:num)', 'Pengembalian::update/$1');
-$routes->get('/pengembalian/delete/(:num)', 'Pengembalian::delete/$1');

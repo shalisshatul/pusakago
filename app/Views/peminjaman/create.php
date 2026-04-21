@@ -11,28 +11,35 @@
 <!-- LIST BUKU -->
 <div id="listBuku" style="display:flex; flex-wrap:wrap; gap:20px;">
 
-<?php foreach ($buku as $b): ?>
+    <?php foreach ($buku as $b): ?>
 
-    <div class="buku-card"
-         data-judul="<?= strtolower($b['judul']) ?>"
-         style="width:180px; border:1px solid #ccc; padding:10px; border-radius:10px; text-align:center;">
+        <div class="buku-card"
+            data-judul="<?= strtolower($b['judul']) ?>"
+            style="width:180px; border:1px solid #ccc; padding:10px; border-radius:10px; text-align:center;">
 
-        <img src="<?= base_url('uploads/' . $b['cover']) ?>"
-             style="width:100%; height:220px; object-fit:cover; border-radius:8px;">
+            <img src="<?= base_url('uploads/buku/' . $b['cover']) ?>"
+                style="width:100%; height:220px; object-fit:cover; border-radius:8px;">
 
-        <h4 style="font-size:14px; margin:10px 0;">
-            <?= $b['judul'] ?>
-        </h4>
+            <h4 style="font-size:14px; margin:10px 0;">
+                <?= $b['judul'] ?>
+            </h4>
 
-        <button type="button" onclick="pilihBuku(<?= $b['id_buku'] ?>, '<?= $b['judul'] ?>')">
-            Pinjam
-        </button>
-        <a href="<?= base_url('buku/detail/'.$b['id_buku'].'?from=peminjaman') ?>">
-    <button>Detail</button>
-</a>
-    </div>
+            <button type="button" onclick="pilihBuku(<?= $b['id_buku'] ?>, '<?= $b['judul'] ?>')">
+                Pinjam
+            </button>
+            <button onclick="showDetail(
+    '<?= esc($b['judul']) ?>',
+    '<?= esc($b['nama_kategori'] ?? '-') ?>',
+    '<?= esc($b['nama_penulis'] ?? '-') ?>',
+    '<?= esc($b['nama_penerbit'] ?? '-') ?>',
+    '<?= esc($b['tahun_terbit'] ?? '-') ?>',
+    '<?= base_url('uploads/buku/' . $b['cover']) ?>'
+)">
+                Detail
+            </button>
+        </div>
 
-<?php endforeach; ?>
+    <?php endforeach; ?>
 
 </div>
 
@@ -72,45 +79,77 @@
 </form>
 
 <script>
+    let bukuDipilih = [];
 
-let bukuDipilih = [];
+    function searchBuku() {
+        let input = document.getElementById('search').value.toLowerCase();
+        let cards = document.querySelectorAll('.buku-card');
 
-function searchBuku() {
-    let input = document.getElementById('search').value.toLowerCase();
-    let cards = document.querySelectorAll('.buku-card');
+        cards.forEach(card => {
+            let judul = card.getAttribute('data-judul');
 
-    cards.forEach(card => {
-        let judul = card.getAttribute('data-judul');
-
-        card.style.display = judul.includes(input) ? "block" : "none";
-    });
-}
-
-function toggleAlamat() {
-    let metode = document.getElementById('metode').value;
-    document.getElementById('form_alamat').style.display =
-        (metode === 'antar') ? 'block' : 'none';
-}
-
-function pilihBuku(id, judul) {
-
-    if (bukuDipilih.includes(id)) {
-        alert("Buku sudah dipilih");
-        return;
+            card.style.display = judul.includes(input) ? "block" : "none";
+        });
     }
 
-    bukuDipilih.push(id);
+    function toggleAlamat() {
+        let metode = document.getElementById('metode').value;
+        document.getElementById('form_alamat').style.display =
+            (metode === 'antar') ? 'block' : 'none';
+    }
 
-    document.getElementById('input_buku').innerHTML +=
-        `<input type="hidden" name="id_buku[]" value="${id}">`;
+    function pilihBuku(id, judul) {
 
-    document.getElementById('list_buku').innerHTML +=
-        `<li>${judul}</li>`;
+        if (bukuDipilih.includes(id)) {
+            alert("Buku sudah dipilih");
+            return;
+        }
 
-    document.getElementById('judul_buku').innerText =
-        bukuDipilih.length + " buku dipilih";
-}
+        bukuDipilih.push(id);
 
+        document.getElementById('input_buku').innerHTML +=
+            `<input type="hidden" name="id_buku[]" value="${id}">`;
+
+        document.getElementById('list_buku').innerHTML +=
+            `<li>${judul}</li>`;
+
+        document.getElementById('judul_buku').innerText =
+            bukuDipilih.length + " buku dipilih";
+    }
 </script>
+<!-- MODAL -->
+<div id="modalDetail" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6);">
 
+    <div style="background:#fff; width:400px; margin:50px auto; padding:20px; border-radius:10px; position:relative;">
+
+        <button onclick="tutupModal()" style="position:absolute; right:10px; top:10px;">X</button>
+
+        <h3 id="detail_judul"></h3>
+
+        <img id="detail_cover" style="width:100%; height:250px; object-fit:cover; border-radius:8px;">
+
+        <p><strong>Kategori:</strong> <span id="detail_kategori"></span></p>
+        <p><strong>Penulis:</strong> <span id="detail_penulis"></span></p>
+        <p><strong>Penerbit:</strong> <span id="detail_penerbit"></span></p>
+        <p><strong>Tahun:</strong> <span id="detail_tahun"></span></p>
+
+    </div>
+</div>
+<script>
+    function showDetail(judul, kategori, penulis, penerbit, tahun, cover) {
+
+        document.getElementById('detail_judul').innerText = judul;
+        document.getElementById('detail_kategori').innerText = kategori;
+        document.getElementById('detail_penulis').innerText = penulis;
+        document.getElementById('detail_penerbit').innerText = penerbit;
+        document.getElementById('detail_tahun').innerText = tahun;
+        document.getElementById('detail_cover').src = cover;
+
+        document.getElementById('modalDetail').style.display = 'block';
+    }
+
+    function tutupModal() {
+        document.getElementById('modalDetail').style.display = 'none';
+    }
+</script>
 <?= $this->endSection() ?>

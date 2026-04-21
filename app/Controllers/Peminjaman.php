@@ -16,11 +16,11 @@ class Peminjaman extends BaseController
 
     // READ
     public function index()
-{
-    $db = \Config\Database::connect();
-    $builder = $db->table('peminjaman');
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('peminjaman');
 
-    $builder->select('
+        $builder->select('
         peminjaman.id_peminjaman,
         peminjaman.tanggal_pinjam,
         peminjaman.tanggal_kembali,
@@ -31,33 +31,38 @@ class Peminjaman extends BaseController
         IFNULL(pengiriman.status, "-") as status_pengiriman
     ');
 
-    $builder->join('users', 'users.id = peminjaman.id', 'left');
+        $builder->join('users', 'users.id = peminjaman.id', 'left');
 
-    $builder->join('detail_peminjaman', 'detail_peminjaman.id_peminjaman = peminjaman.id_peminjaman', 'left');
-    $builder->join('buku', 'buku.id_buku = detail_peminjaman.id_buku', 'left');
+        $builder->join('detail_peminjaman', 'detail_peminjaman.id_peminjaman = peminjaman.id_peminjaman', 'left');
+        $builder->join('buku', 'buku.id_buku = detail_peminjaman.id_buku', 'left');
 
-    $builder->join('pengiriman', 'pengiriman.id_peminjaman = peminjaman.id_peminjaman', 'left');
+        $builder->join('pengiriman', 'pengiriman.id_peminjaman = peminjaman.id_peminjaman', 'left');
 
-    $builder->groupBy('peminjaman.id_peminjaman');
+        $builder->groupBy('peminjaman.id_peminjaman');
 
-    if (session()->get('role') == 'anggota') {
-        $builder->where('peminjaman.id', session()->get('id'));
+        if (session()->get('role') == 'anggota') {
+            $builder->where('peminjaman.id', session()->get('id'));
+        }
+
+        $builder->orderBy('peminjaman.id_peminjaman', 'DESC');
+
+        $data['peminjaman'] = $builder->get()->getResultArray();
+
+        return view('peminjaman/index', $data);
     }
 
-    $builder->orderBy('peminjaman.id_peminjaman', 'DESC');
 
-    $data['peminjaman'] = $builder->get()->getResultArray();
 
-    return view('peminjaman/index', $data);
-}
-
-    
-    
-    // CREATE
     public function create()
     {
         $bukuModel = new \App\Models\BukuModel();
-        $data['buku'] = $bukuModel->findAll();
+
+        $data['buku'] = $bukuModel
+            ->select('buku.*, kategori.nama_kategori, penulis.nama_penulis, penerbit.nama_penerbit')
+            ->join('kategori', 'kategori.id_kategori = buku.id_kategori', 'left')
+            ->join('penulis', 'penulis.id_penulis = buku.id_penulis', 'left')
+            ->join('penerbit', 'penerbit.id_penerbit = buku.id_penerbit', 'left')
+            ->findAll();
 
         return view('peminjaman/create', $data);
     }
@@ -68,16 +73,16 @@ class Peminjaman extends BaseController
         $tanggal_pinjam = $this->request->getPost('tanggal_pinjam');
         $metode = $this->request->getPost('metode');
         $id_buku_list = $this->request->getPost('id_buku');
-    
+
         if (!is_array($id_buku_list)) {
             $id_buku_list = [$id_buku_list];
         }
-    
+
         $tanggal_kembali = date('Y-m-d', strtotime($tanggal_pinjam . ' +5 days'));
-    
+
         // 🔥 WAJIB: awalnya MENUNGGU
         $status = 'menunggu';
-    
+
         // SIMPAN HEADER
         $this->peminjaman->insert([
             'tanggal_pinjam'  => $tanggal_pinjam,
@@ -86,12 +91,12 @@ class Peminjaman extends BaseController
             'id'              => session()->get('id'),
             'metode'          => $metode
         ]);
-    
+
         $id_peminjaman = $this->peminjaman->getInsertID();
-    
+
         // SIMPAN DETAIL
         $detailModel = new \App\Models\DetailPeminjamanModel();
-    
+
         foreach ($id_buku_list as $id_buku) {
             $detailModel->insert([
                 'id_peminjaman' => $id_peminjaman,
@@ -99,11 +104,11 @@ class Peminjaman extends BaseController
                 'jumlah'        => 1
             ]);
         }
-    
+
         return redirect()->to('/peminjaman')
             ->with('success', 'Data berhasil disimpan');
     }
-    
+
     // UPDATE
     public function update($id)
     {
@@ -155,35 +160,35 @@ class Peminjaman extends BaseController
 
     // DETAIL
     public function detail($id)
-{
-    $db = \Config\Database::connect();
+    {
+        $db = \Config\Database::connect();
 
-    $builder = $db->table('peminjaman');
+        $builder = $db->table('peminjaman');
 
-    $builder->select('peminjaman.*, users.nama');
+        $builder->select('peminjaman.*, users.nama');
 
-    $builder->join('users', 'users.id = peminjaman.id', 'left');
+        $builder->join('users', 'users.id = peminjaman.id', 'left');
 
-    $builder->where('peminjaman.id_peminjaman', $id);
+        $builder->where('peminjaman.id_peminjaman', $id);
 
-    $peminjaman = $builder->get()->getRowArray();
+        $peminjaman = $builder->get()->getRowArray();
 
-    // ambil semua buku dari detail_peminjaman
-    $buku = $db->table('detail_peminjaman')
-        ->select('buku.judul')
-        ->join('buku', 'buku.id_buku = detail_peminjaman.id_buku')
-        ->where('detail_peminjaman.id_peminjaman', $id)
-        ->get()
-        ->getResultArray();
+        // ambil semua buku dari detail_peminjaman
+        $buku = $db->table('detail_peminjaman')
+            ->select('buku.judul')
+            ->join('buku', 'buku.id_buku = detail_peminjaman.id_buku')
+            ->where('detail_peminjaman.id_peminjaman', $id)
+            ->get()
+            ->getResultArray();
 
-    $judul = array_column($buku, 'judul');
+        $judul = array_column($buku, 'judul');
 
-    $peminjaman['judul'] = implode(', ', $judul);
+        $peminjaman['judul'] = implode(', ', $judul);
 
-    $data['peminjaman'] = $peminjaman;
+        $data['peminjaman'] = $peminjaman;
 
-    return view('peminjaman/detail', $data);
-}
+        return view('peminjaman/detail', $data);
+    }
 
     // DELETE
     public function delete($id)
@@ -226,20 +231,17 @@ class Peminjaman extends BaseController
         $this->peminjaman->update($id, [
             'status' => 'dipinjam'
         ]);
-    
+
         return redirect()->to('/peminjaman')
             ->with('success', 'Peminjaman disetujui');
     }
     public function tolak($id)
-{
-    $this->peminjaman->update($id, [
-        'status' => 'ditolak'
-    ]);
+    {
+        $this->peminjaman->update($id, [
+            'status' => 'ditolak'
+        ]);
 
-    return redirect()->to('/peminjaman')
-        ->with('success', 'Peminjaman ditolak');
-}
-
-    
-
+        return redirect()->to('/peminjaman')
+            ->with('success', 'Peminjaman ditolak');
+    }
 }

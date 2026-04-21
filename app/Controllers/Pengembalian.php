@@ -6,18 +6,11 @@ use App\Models\PengembalianModel;
 
 class Pengembalian extends BaseController
 {
-    public function index()
+    public function create($id_peminjaman)
     {
-        $model = new PengembalianModel();
+        $data['id_peminjaman'] = $id_peminjaman;
 
-        $data['pengembalian'] = $model->findAll();
-
-        return view('pengembalian/index', $data);
-    }
-
-    public function create()
-    {
-        return view('pengembalian/create');
+        return view('pengembalian/create', $data);
     }
 
     public function store()
@@ -25,43 +18,35 @@ class Pengembalian extends BaseController
         $model = new PengembalianModel();
 
         $model->save([
-            'id_peminjaman' => $this->request->getPost('id_peminjaman'),
-            'tanggal_kembali' => $this->request->getPost('tanggal_kembali'),
-            'denda' => $this->request->getPost('denda'),
-            'status' => 'Menunggu'
+            'id_peminjaman'        => $this->request->getPost('id_peminjaman'),
+            'tanggal_dikembalikan' => $this->request->getPost('tanggal_dikembalikan'),
+            'denda'                => $this->request->getPost('denda'),
         ]);
 
-        return redirect()->to('/pengembalian');
+        // update status peminjaman
+        $db = \Config\Database::connect();
+        $db->table('peminjaman')
+            ->where('id_peminjaman', $this->request->getPost('id_peminjaman'))
+            ->update(['status' => 'dikembalikan']);
+
+        return redirect()->to('/peminjaman')->with('success', 'Buku berhasil dikembalikan');
     }
-
-    public function edit($id)
+    public function index()
     {
-        $model = new PengembalianModel();
+        $db = \Config\Database::connect();
 
-        $data['pengembalian'] = $model->find($id);
+        $data['pengembalian'] = $db->table('pengembalian')
+            ->select('
+            pengembalian.*,
+            peminjaman.tanggal_pinjam,
+            peminjaman.tanggal_kembali,
+            users.nama
+        ')
+            ->join('peminjaman', 'peminjaman.id_peminjaman = pengembalian.id_peminjaman')
+            ->join('users', 'users.id = peminjaman.id')
+            ->get()
+            ->getResultArray();
 
-        return view('pengembalian/edit', $data);
-    }
-
-    public function update($id)
-    {
-        $model = new PengembalianModel();
-
-        $model->update($id, [
-            'id_peminjaman' => $this->request->getPost('id_peminjaman'),
-            'tanggal_kembali' => $this->request->getPost('tanggal_kembali'),
-            'denda' => $this->request->getPost('denda'),
-            'status' => $this->request->getPost('status')
-        ]);
-
-        return redirect()->to('/pengembalian');
-    }
-
-    public function delete($id)
-    {
-        $model = new PengembalianModel();
-        $model->delete($id);
-
-        return redirect()->to('/pengembalian');
+        return view('pengembalian/index', $data);
     }
 }

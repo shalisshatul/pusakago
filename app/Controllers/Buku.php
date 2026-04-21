@@ -45,29 +45,29 @@ class Buku extends BaseController
         $penerbitModel = new PenerbitModel();
         $rakModel      = new RakModel();
         $rakBukuModel  = new RakBukuModel();
-    
+
         $judul       = $this->request->getPost('judul');
         $id_kategori = $this->request->getPost('id_kategori');
         $id_penulis  = $this->request->getPost('id_penulis');
         $id_penerbit = $this->request->getPost('id_penerbit');
         $id_rak      = $this->request->getPost('id_rak');
-    
+
         $kategoriBaru = $this->request->getPost('kategori_baru');
         $penulisBaru  = $this->request->getPost('penulis_baru');
         $penerbitBaru = $this->request->getPost('penerbit_baru');
         $rakBaru      = $this->request->getPost('rak_baru');
-    
+
         // =========================
         // UPLOAD COVER (FIX UTAMA)
         // =========================
         $cover = $this->request->getFile('cover');
         $namaCover = null;
-    
+
         if ($cover && $cover->isValid() && !$cover->hasMoved()) {
             $namaCover = $cover->getRandomName();
-            $cover->move(FCPATH . 'uploads', $namaCover);
+            $cover->move(FCPATH . 'uploads/buku', $namaCover);
         }
-    
+
         // =========================
         // INSERT KATEGORI BARU
         // =========================
@@ -75,7 +75,7 @@ class Buku extends BaseController
             $kategoriModel->insert(['nama_kategori' => $kategoriBaru]);
             $id_kategori = $kategoriModel->insertID();
         }
-    
+
         // =========================
         // INSERT PENULIS BARU
         // =========================
@@ -83,7 +83,7 @@ class Buku extends BaseController
             $penulisModel->insert(['nama_penulis' => $penulisBaru]);
             $id_penulis = $penulisModel->insertID();
         }
-    
+
         // =========================
         // INSERT PENERBIT BARU
         // =========================
@@ -94,7 +94,7 @@ class Buku extends BaseController
             ]);
             $id_penerbit = $penerbitModel->insertID();
         }
-    
+
         // =========================
         // INSERT RAK BARU
         // =========================
@@ -105,26 +105,26 @@ class Buku extends BaseController
             ]);
             $id_rak = $rakModel->insertID();
         }
-    
+
         // =========================
         // SIMPAN BUKU
         // =========================
-    
-            $this->buku->insert([
-                'judul'        => $judul,
-                'isbn'         => $this->request->getPost('isbn'),
-                'deskripsi'    => $this->request->getPost('deskripsi'),
-                'id_kategori'  => $id_kategori,
-                'id_penulis'   => $id_penulis,
-                'id_penerbit'  => $id_penerbit,
-                'tahun_terbit' => $this->request->getPost('tahun_terbit'),
-                'jumlah'       => $this->request->getPost('jumlah'),
-                'tersedia'     => $this->request->getPost('tersedia'),
-                'cover'        => $namaCover
-            ]);
-    
+
+        $this->buku->insert([
+            'judul'        => $judul,
+            'isbn'         => $this->request->getPost('isbn'),
+            'deskripsi'    => $this->request->getPost('deskripsi'),
+            'id_kategori'  => $id_kategori,
+            'id_penulis'   => $id_penulis,
+            'id_penerbit'  => $id_penerbit,
+            'tahun_terbit' => $this->request->getPost('tahun_terbit'),
+            'jumlah'       => $this->request->getPost('jumlah'),
+            'tersedia'     => $this->request->getPost('tersedia'),
+            'cover'        => $namaCover
+        ]);
+
         $id_buku = $this->buku->insertID();
-    
+
         // =========================
         // SIMPAN RAK BUKU
         // =========================
@@ -134,7 +134,7 @@ class Buku extends BaseController
                 'id_rak'  => $id_rak
             ]);
         }
-    
+
         return redirect()->to('/buku')->with('success', 'Buku berhasil ditambahkan');
     }
     public function edit($id)
@@ -161,7 +161,7 @@ class Buku extends BaseController
             'jumlah'       => $this->request->getPost('jumlah'),
             'tersedia'     => $this->request->getPost('tersedia'),
             'isbn'      => $this->request->getPost('isbn'),
-'deskripsi' => $this->request->getPost('deskripsi'),
+            'deskripsi' => $this->request->getPost('deskripsi'),
         ]);
 
         $rakBukuModel->where('id_buku', $id)->delete();
@@ -177,21 +177,21 @@ class Buku extends BaseController
     }
 
     public function detail($id)
-{
-    $bukuModel = new \App\Models\BukuModel();
+    {
+        $bukuModel = new \App\Models\BukuModel();
 
-    $data['buku'] = $bukuModel
-        ->select('buku.*, kategori.nama_kategori, penulis.nama_penulis, penerbit.nama_penerbit')
-        ->join('kategori', 'kategori.id_kategori = buku.id_kategori', 'left')
-        ->join('penulis', 'penulis.id_penulis = buku.id_penulis', 'left')
-        ->join('penerbit', 'penerbit.id_penerbit = buku.id_penerbit', 'left')
-        ->find($id);
+        $data['buku'] = $bukuModel
+            ->select('buku.*, kategori.nama_kategori, penulis.nama_penulis, penerbit.nama_penerbit')
+            ->join('kategori', 'kategori.id_kategori = buku.id_kategori', 'left')
+            ->join('penulis', 'penulis.id_penulis = buku.id_penulis', 'left')
+            ->join('penerbit', 'penerbit.id_penerbit = buku.id_penerbit', 'left')
+            ->find($id);
 
-    // ambil parameter dari URL
-    $data['from'] = $this->request->getGet('from');
+        // ambil parameter dari URL
+        $data['from'] = $this->request->getGet('from');
 
-    return view('buku/detail', $data);
-}
+        return view('buku/detail', $data);
+    }
 
 
     public function delete($id)

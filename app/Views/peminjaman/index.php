@@ -89,7 +89,14 @@
                 <a href="<?= base_url('peminjaman/detail/' . $p['id_peminjaman']) ?>">
                     Detail
                 </a>
-
+                <?php if (
+                    session()->get('role') == 'admin' &&
+                    $p['status'] == 'dipinjam'
+                ): ?>
+                    | <a href="<?= base_url('pengembalian/create/' . $p['id_peminjaman']) ?>">
+                        <button>Pengembalian</button>
+                    </a>
+                <?php endif; ?>
                 <!-- HAPUS (ADMIN) -->
                 <?php if (session()->get('role') == 'admin'): ?>
                     | <a href="<?= base_url('peminjaman/delete/' . $p['id_peminjaman']) ?>"

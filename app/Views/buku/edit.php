@@ -91,7 +91,7 @@
 
     Cover Lama:<br>
     <?php if (!empty($buku['cover'])) : ?>
-        <img src="<?= base_url('uploads/' . $buku['cover']) ?>" width="80"><br>
+        <img src="<?= base_url('uploads/buku/' . $buku['cover']) ?>" width="80"><br>
     <?php else : ?>
         Tidak ada<br>
     <?php endif; ?>

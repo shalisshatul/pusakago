@@ -1,17 +1,23 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
-<h2>Tambah Pengembalian</h2>
 
-<form action="/pengembalian/store" method="post">
-    ID Peminjaman <br>
-    <input type="text" name="id_peminjaman"><br>
+<h2>Form Pengembalian</h2>
 
-    Tanggal Kembali <br>
-    <input type="date" name="tanggal_kembali"><br>
+<form action="<?= base_url('pengembalian/store') ?>" method="post">
 
-    Denda <br>
-    <input type="number" name="denda"><br><br>
+    <input type="hidden" name="id_peminjaman" value="<?= $id_peminjaman ?>">
+
+    <p>
+        <label>Tanggal Dikembalikan</label><br>
+        <input type="date" name="tanggal_dikembalikan" required>
+    </p>
+
+    <p>
+        <label>Denda</label><br>
+        <input type="number" name="denda" value="0">
+    </p>
 
     <button type="submit">Simpan</button>
 </form>
+
 <?= $this->endSection() ?>
