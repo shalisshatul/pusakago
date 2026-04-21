@@ -7,7 +7,9 @@
 <?php if (session()->get('role') == 'admin' || session()->get('role') == 'petugas') : ?>
     <a href="<?= base_url('/users') ?>">Users</a><br>
 <?php endif; ?>
-
+<?php if (session()->get('role') == 'admin') : ?>
+<a href="<?= base_url('/backup') ?>" class="btn btn-success">Backup Database</a>
+<?php endif; ?>
 <?php $idu = session('id'); ?>
 <a href="<?= base_url('users/edit/' . $idu) ?>">Setting</a><br>
 

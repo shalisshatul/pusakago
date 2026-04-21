@@ -2,48 +2,30 @@
 <?= $this->section('content') ?>
 <h2>Data Pengembalian</h2>
 
-<table border="1" cellpadding="8">
+<a href="/pengembalian/create">+ Tambah</a>
+
+<table border="1">
     <tr>
         <th>ID</th>
-        <th>Nama</th>
-        <th>Judul Buku</th>
-        <th>Tanggal Pinjam</th>
-        <th>Tanggal Dikembalikan</th>
+        <th>ID Peminjaman</th>
+        <th>Tanggal Kembali</th>
         <th>Denda</th>
+        <th>Status</th>
         <th>Aksi</th>
     </tr>
 
     <?php foreach ($pengembalian as $p): ?>
     <tr>
         <td><?= $p['id_pengembalian'] ?></td>
-        <td><?= $p['nama'] ?></td>
-        <td><?= $p['judul'] ?></td>
-        <td><?= $p['tanggal_pinjam'] ?></td>
-        <td><?= $p['tanggal_dikembalikan'] ?></td>
-
+        <td><?= $p['id_peminjaman'] ?></td>
+        <td><?= $p['tanggal_kembali'] ?></td>
+        <td><?= $p['denda'] ?></td>
+        <td><?= $p['status'] ?></td>
         <td>
-            <?php if ($p['denda'] > 0): ?>
-                💰 Rp <?= number_format($p['denda']) ?>
-            <?php else: ?>
-                -
-            <?php endif; ?>
+            <a href="/pengembalian/edit/<?= $p['id_pengembalian'] ?>">Edit</a>
+            <a href="/pengembalian/delete/<?= $p['id_pengembalian'] ?>" onclick="return confirm('Hapus?')">Hapus</a>
         </td>
-
-        <!-- AKSI -->
-        <td>
-            <?php if (session()->get('role') == 'admin'): ?>
-                <a href="<?= base_url('pengembalian/delete/'.$p['id_pengembalian']) ?>"
-                   onclick="return confirm('Yakin ingin menghapus data ini?')">
-                    <button>Hapus</button>
-                </a>
-            <?php else: ?>
-                -
-            <?php endif; ?>
-        </td>
-
     </tr>
     <?php endforeach; ?>
-
 </table>
-
 <?= $this->endSection() ?>

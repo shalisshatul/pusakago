@@ -2,25 +2,22 @@
 <?= $this->section('content') ?>
 <h2>Edit Pengembalian</h2>
 
-<form action="<?= base_url('pengembalian/update/'.$pengembalian['id_pengembalian']) ?>" method="post">
+<form action="/pengembalian/update/<?= $pengembalian['id_pengembalian'] ?>" method="post">
+    ID Peminjaman <br>
+    <input type="text" name="id_peminjaman" value="<?= $pengembalian['id_peminjaman'] ?>"><br>
 
-    <p>
-        ID Peminjaman<br>
-        <input type="number" name="id_peminjaman" value="<?= $pengembalian['id_peminjaman'] ?>">
-    </p>
+    Tanggal Kembali <br>
+    <input type="date" name="tanggal_kembali" value="<?= $pengembalian['tanggal_kembali'] ?>"><br>
 
-    <p>
-        Tanggal Dikembalikan<br>
-        <input type="date" name="tanggal_dikembalikan" value="<?= $pengembalian['tanggal_dikembalikan'] ?>">
-    </p>
+    Denda <br>
+    <input type="number" name="denda" value="<?= $pengembalian['denda'] ?>"><br>
 
-    <p>
-        Denda<br>
-        <input type="number" step="0.01" name="denda" value="<?= $pengembalian['denda'] ?>">
-    </p>
+    Status <br>
+    <select name="status">
+        <option value="Menunggu">Menunggu</option>
+        <option value="Dikembalikan">Dikembalikan</option>
+    </select><br><br>
 
     <button type="submit">Update</button>
-
 </form>
-
 <?= $this->endSection() ?>

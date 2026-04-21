@@ -1,24 +1,28 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h2>Detail Buku</h2>
+<h2>Detail Peminjaman</h2>
 
-<p><b>Judul:</b> <?= $buku['judul'] ?></p>
-<p><b>ISBN:</b> <?= $buku['isbn'] ?></p>
-<p><b>Kategori:</b> <?= $buku['nama_kategori'] ?></p>
-<p><b>Penulis:</b> <?= $buku['nama_penulis'] ?></p>
-<p><b>Penerbit:</b> <?= $buku['nama_penerbit'] ?></p>
-<p><b>Rak:</b> <?= $buku['nama_rak'] ?? '-' ?></p>
-<p><b>jumlah</b> <?= $buku['jumlah'] ?></p>
-<p><b>tersedia:</b> <?= $buku['tersedia'] ?></p>
-<p><b>Tahun:</b> <?= $buku['tahun_terbit'] ?></p>
-<p><b>Deskripsi:</b> <?= $buku['deskripsi'] ?></p>
+<?php if (!empty($peminjaman)): ?>
 
-<?php if (!empty($buku['cover'])) : ?>
-    <img src="<?= base_url('uploads/' . $buku['cover']) ?>" width="120">
+    <p><b>Nama:</b> <?= $peminjaman['nama'] ?></p>
+    <p><b>Judul Buku:</b> <?= $peminjaman['judul'] ?></p>
+    <p><b>Tanggal Pinjam:</b> <?= $peminjaman['tanggal_pinjam'] ?></p>
+    <p><b>Tanggal Kembali:</b> <?= $peminjaman['tanggal_kembali'] ?></p>
+    <p><b>Status:</b> <?= $peminjaman['status'] ?></p>
+
+<?php else: ?>
+
+    <p>Data tidak ditemukan</p>
+
 <?php endif; ?>
 
-<br><br>
-<a href="<?= base_url('buku') ?>">Kembali</a>
+<br>
+
+<a href="<?= base_url('peminjaman') ?>">Kembali</a>
+
+<a href="<?= base_url('peminjaman/print/'.$peminjaman['id_peminjaman'] ?? 0) ?>" target="_blank">
+    Print
+</a>
 
 <?= $this->endSection() ?>

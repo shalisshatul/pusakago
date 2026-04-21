@@ -2,25 +2,16 @@
 <?= $this->section('content') ?>
 <h2>Tambah Pengembalian</h2>
 
-<form action="<?= base_url('pengembalian/store') ?>" method="post">
+<form action="/pengembalian/store" method="post">
+    ID Peminjaman <br>
+    <input type="text" name="id_peminjaman"><br>
 
-    <p>
-        ID Peminjaman<br>
-        <input type="number" name="id_peminjaman">
-    </p>
+    Tanggal Kembali <br>
+    <input type="date" name="tanggal_kembali"><br>
 
-    <p>
-        Tanggal Dikembalikan<br>
-        <input type="date" name="tanggal_dikembalikan">
-    </p>
-
-    <p>
-        Denda<br>
-        <input type="number" step="0.01" name="denda">
-    </p>
+    Denda <br>
+    <input type="number" name="denda"><br><br>
 
     <button type="submit">Simpan</button>
-
 </form>
-
 <?= $this->endSection() ?>

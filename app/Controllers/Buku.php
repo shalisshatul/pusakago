@@ -177,19 +177,22 @@ class Buku extends BaseController
     }
 
     public function detail($id)
-    {
-        $data['buku'] = $this->buku
-            ->select('buku.*, kategori.nama_kategori, penulis.nama_penulis, penerbit.nama_penerbit, rak.nama_rak')
-            ->join('kategori', 'kategori.id_kategori = buku.id_kategori')
-            ->join('penulis', 'penulis.id_penulis = buku.id_penulis')
-            ->join('penerbit', 'penerbit.id_penerbit = buku.id_penerbit')
-            ->join('rak_buku', 'rak_buku.id_buku = buku.id_buku', 'left')
-            ->join('rak', 'rak.id_rak = rak_buku.id_rak', 'left')
-            ->where('buku.id_buku', $id)
-            ->first();
+{
+    $bukuModel = new \App\Models\BukuModel();
 
-        return view('buku/detail', $data);
-    }
+    $data['buku'] = $bukuModel
+        ->select('buku.*, kategori.nama_kategori, penulis.nama_penulis, penerbit.nama_penerbit')
+        ->join('kategori', 'kategori.id_kategori = buku.id_kategori', 'left')
+        ->join('penulis', 'penulis.id_penulis = buku.id_penulis', 'left')
+        ->join('penerbit', 'penerbit.id_penerbit = buku.id_penerbit', 'left')
+        ->find($id);
+
+    // ambil parameter dari URL
+    $data['from'] = $this->request->getGet('from');
+
+    return view('buku/detail', $data);
+}
+
 
     public function delete($id)
     {

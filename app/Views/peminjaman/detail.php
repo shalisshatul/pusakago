@@ -4,7 +4,7 @@
 <h2>Detail Peminjaman</h2>
 
 <p><b>Nama:</b> <?= $peminjaman['nama'] ?></p>
-<p><b>Judul Buku:</b> <?= $peminjaman['judul'] ?></p>
+<p><b>Judul Buku yang di pinjam:</b> <?= $peminjaman['judul'] ?></p>
 <p><b>Tanggal Pinjam:</b> <?= $peminjaman['tanggal_pinjam'] ?></p>
 <p><b>Tanggal Kembali:</b> <?= $peminjaman['tanggal_kembali'] ?></p>
 <p><b>Status:</b> <?= $peminjaman['status'] ?></p>

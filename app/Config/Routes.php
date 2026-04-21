@@ -88,9 +88,8 @@ $routes->post('rak/store', 'Rak::store');
 $routes->get('rak/edit/(:num)', 'Rak::edit/$1');
 $routes->post('rak/update/(:num)', 'Rak::update/$1');
 $routes->get('rak/delete/(:num)', 'Rak::delete/$1');
- //
- $routes->get('peminjaman/print', 'Users::print', $allRole);
- $routes->get('peminjaman', 'Peminjaman::index');
+ // PEMINJAMAN
+$routes->get('peminjaman', 'Peminjaman::index');
 $routes->get('peminjaman/create', 'Peminjaman::create');
 $routes->post('peminjaman/store', 'Peminjaman::store');
 
@@ -99,17 +98,27 @@ $routes->get('peminjaman/kembalikan/(:num)', 'Peminjaman::kembalikan/$1');
 $routes->get('peminjaman/delete/(:num)', 'Peminjaman::delete/$1');
 $routes->get('peminjaman/detail/(:num)', 'Peminjaman::detail/$1');
 $routes->get('peminjaman/print/(:num)', 'Peminjaman::print/$1');
+$routes->get('peminjaman/setujui/(:num)', 'Peminjaman::setujui/$1');
+$routes->get('peminjaman/tolak/(:num)', 'Peminjaman::tolak/$1');
 
 
-// pengembalian
-
-$routes->get('/pengembalian', 'Pengembalian::index');
-$routes->get('/pengembalian/create', 'Pengembalian::create');
-$routes->post('/pengembalian/store', 'Pengembalian::store');
-$routes->get('/pengembalian/edit/(:num)', 'Pengembalian::edit/$1');
-$routes->post('/pengembalian/update/(:num)', 'Pengembalian::update/$1');
-$routes->get('pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
 
 //pengirima
 $routes->get('/pengiriman/antar/(:num)', 'Pengiriman::antar/$1');
 $routes->get('/pengiriman/sampai/(:num)', 'Pengiriman::sampai/$1');
+//
+$routes->get('/backup', 'Backup::index');
+//
+$routes->get('/restore', 'Restore::index');
+$routes->post('/restore/auth', 'Restore::auth');
+$routes->get('/restore/form', 'Restore::form');
+$routes->post('/restore/process', 'Restore::process');
+//pengembalian
+$routes->get('pengembalian', 'Pengembalian::index');
+
+
+$routes->get('/pengembalian/create', 'Pengembalian::create');
+$routes->post('/pengembalian/store', 'Pengembalian::store');
+$routes->get('/pengembalian/edit/(:num)', 'Pengembalian::edit/$1');
+$routes->post('/pengembalian/update/(:num)', 'Pengembalian::update/$1');
+$routes->get('/pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
