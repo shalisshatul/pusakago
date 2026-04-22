@@ -101,11 +101,15 @@ $routes->get('peminjaman/print/(:num)', 'Peminjaman::print/$1');
 $routes->get('peminjaman/setujui/(:num)', 'Peminjaman::setujui/$1');
 $routes->get('peminjaman/tolak/(:num)', 'Peminjaman::tolak/$1');
 
-
-
-//pengirima
+// PENGIRIMAN
 $routes->get('pengiriman/antar/(:num)', 'Pengiriman::antar/$1');
+
 $routes->get('pengiriman/sampai/(:num)', 'Pengiriman::sampai/$1');
+
+// PENGEMBALIAN
+$routes->get('pengembalian/create/(:num)', 'Pengembalian::create/$1');
+$routes->get('pengembalian', 'Pengembalian::index');
+$routes->post('pengembalian/store', 'Pengembalian::store');
 
 //
 $routes->get('/backup', 'Backup::index');
@@ -114,7 +118,3 @@ $routes->get('/restore', 'Restore::index');
 $routes->post('/restore/auth', 'Restore::auth');
 $routes->get('/restore/form', 'Restore::form');
 $routes->post('/restore/process', 'Restore::process');
-//pengembalian
-$routes->get('pengembalian/create/(:num)', 'Pengembalian::create/$1');
-$routes->post('pengembalian/store', 'Pengembalian::store');
-$routes->get('pengembalian', 'Pengembalian::index');

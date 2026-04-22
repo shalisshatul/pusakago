@@ -17,13 +17,14 @@ class Pengembalian extends BaseController
             peminjaman.tanggal_kembali,
             users.nama
         ')
-        ->join('peminjaman', 'peminjaman.id_peminjaman = pengembalian.id_peminjaman')
-        ->join('users', 'users.id = peminjaman.id')
+        ->join('peminjaman', 'peminjaman.id_peminjaman = pengembalian.id_peminjaman', 'left')
+        ->join('users', 'users.id = peminjaman.id', 'left')
         ->get()
         ->getResultArray();
 
     return view('pengembalian/index', $data);
 }
+
 
     public function create($id_peminjaman)
     {
@@ -34,56 +35,26 @@ class Pengembalian extends BaseController
 
     public function store()
     {
-        $model = new PengembalianModel();
-        $db = \Config\Database::connect();
+        $model = new \App\Models\PengembalianModel();
     
-        $id = $this->request->getPost('id_peminjaman');
-        $tanggal_kembali = $this->request->getPost('tanggal_dikembalikan');
+        $tanggal_dikembalikan = $this->request->getPost('tanggal_dikembalikan');
+        $tanggal_kembali = $this->request->getPost('tanggal_kembali');
     
-        // 🔥 ambil data peminjaman
-        $peminjaman = $db->table('peminjaman')
-            ->where('id_peminjaman', $id)
-            ->get()
-            ->getRowArray();
-    
-        // 🔥 HITUNG DENDA (pakai tenggat)
-        $tenggat = $peminjaman['tanggal_kembali'];
+        // hitung denda (contoh 1000 per hari telat)
         $denda = 0;
-    
-        if ($tanggal_kembali > $tenggat) {
-            $selisih = (strtotime($tanggal_kembali) - strtotime($tenggat)) / 86400;
-            $denda = $selisih * 1000;
+        if ($tanggal_dikembalikan > $tanggal_kembali) {
+            $telat = (strtotime($tanggal_dikembalikan) - strtotime($tanggal_kembali)) / 86400;
+            $denda = $telat * 1000;
         }
     
-        // 🔥 SIMPAN PENGEMBALIAN
         $model->save([
-            'id_peminjaman'        => $id,
-            'tanggal_dikembalikan' => $tanggal_kembali,
-            'denda'                => $denda,
+            'id_peminjaman' => $this->request->getPost('id_peminjaman'),
+            'tanggal_dikembalikan' => $tanggal_dikembalikan,
+            'denda' => $denda
         ]);
     
-        // =========================
-        // 🔥 TAMBAH STOK (INI YANG KURANG)
-        // =========================
-        $detail = $db->table('detail_peminjaman')
-            ->where('id_peminjaman', $id)
-            ->get()
-            ->getResultArray();
-    
-        foreach ($detail as $d) {
-            $db->table('buku')
-                ->where('id_buku', $d['id_buku'])
-                ->set('tersedia', 'tersedia + ' . (int)$d['jumlah'], false)
-                ->update();
-        }
-    
-        // 🔥 UPDATE STATUS
-        $db->table('peminjaman')
-            ->where('id_peminjaman', $id)
-            ->update(['status' => 'dikembalikan']);
-    
-        return redirect()->to('/peminjaman')
-            ->with('success', 'Buku berhasil dikembalikan. Denda: Rp ' . $denda);
+        return redirect()->to('/pengembalian');
     }
+    
     
 }
