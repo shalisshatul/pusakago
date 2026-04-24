@@ -12,11 +12,7 @@
         <input type="date" name="tanggal_dikembalikan" required>
     </p>
 
-    <p>
-        <label>Denda</label><br>
-        <input type="number" name="denda" value="0">
-    </p>
-
+    
     <button type="submit">Simpan</button>
 </form>
 

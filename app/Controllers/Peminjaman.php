@@ -75,79 +75,112 @@ class Peminjaman extends BaseController
         return view('peminjaman/create', $data);
     }
 
-    // STORE (MULTI BUKU FIX)
     public function store()
-    {
-        $db = \Config\Database::connect();
-    
-        $metode = $this->request->getPost('metode');
-        $id_buku_list = $this->request->getPost('id_buku');
-    
-        // ❌ validasi kosong
-        if (!$id_buku_list) {
-            return redirect()->back()->with('error', 'Pilih minimal 1 buku');
-        }
-    
-        if (!is_array($id_buku_list)) {
-            $id_buku_list = [$id_buku_list];
-        }
-    
-        // 🔥 hilangkan duplikat (biar tidak double insert)
-        $id_buku_list = array_unique($id_buku_list);
-    
-        // status awal
+{
+    $db = \Config\Database::connect();
+
+    $metode = $this->request->getPost('metode');
+    $id_buku_list = $this->request->getPost('id_buku');
+
+    // ❌ validasi kosong
+    if (!$id_buku_list) {
+        return redirect()->back()->with('error', 'Pilih minimal 1 buku');
+    }
+
+    if (!is_array($id_buku_list)) {
+        $id_buku_list = [$id_buku_list];
+    }
+
+    // 🔥 hilangkan duplikat
+    $id_buku_list = array_unique($id_buku_list);
+
+    // =========================
+    // 🔥 LOGIKA STATUS BARU
+    // =========================
+    $tanggal_pinjam = null;
+    $tanggal_kembali = null;
+
+    if ($metode == 'ambil') {
+        $status = 'dipinjam';
+        $tanggal_pinjam = date('Y-m-d');
+        $tanggal_kembali = date('Y-m-d', strtotime('+5 days'));
+    } else {
         $status = 'menunggu';
-    
-        // 🔥 simpan peminjaman
-        $this->peminjaman->insert([
-            'tanggal_pinjam'  => null,
-            'tanggal_kembali' => null,
-            'status'          => $status,
-            'id'              => session()->get('id'),
-            'metode'          => $metode
+    }
+
+    // 🔥 simpan peminjaman
+    $this->peminjaman->insert([
+        'tanggal_pinjam'  => $tanggal_pinjam,
+        'tanggal_kembali' => $tanggal_kembali,
+        'status'          => $status,
+        'id'              => session()->get('id'),
+        'metode'          => $metode
+    ]);
+
+    $id_peminjaman = $this->peminjaman->getInsertID();
+
+    // =========================
+    // 🚚 JIKA METODE ANTAR
+    // =========================
+    if ($metode == 'antar') {
+
+        $alamat = $this->request->getPost('alamat');
+        $biaya = 10000;
+
+        $db->table('pengiriman')->insert([
+            'id_peminjaman' => $id_peminjaman,
+            'alamat'        => $alamat,
+            'biaya'         => $biaya,
+            'status'        => 'menunggu'
         ]);
-    
-        $id_peminjaman = $this->peminjaman->getInsertID();
-        $db = \Config\Database::connect();
 
-// 🔥 CEK JIKA METODE ANTAR
-if ($metode == 'antar') {
+        $db->table('transaksi')->insert([
+            'id_peminjaman' => $id_peminjaman,
+            'jenis'         => 'pengiriman',
+            'jumlah'        => $biaya,
+            'status'        => 'belum_bayar' // 🔥 WAJIB
+        ]);
+        
+    }
 
-    $alamat = $this->request->getPost('alamat'); // dari form
-    $biaya = 10000; // bisa kamu ubah nanti
+    // =========================
+    // 📚 SIMPAN DETAIL
+    // =========================
+    $detailModel = new \App\Models\DetailPeminjamanModel();
 
-    // 🔥 SIMPAN KE PENGIRIMAN
-    $db->table('pengiriman')->insert([
-        'id_peminjaman' => $id_peminjaman,
-        'alamat'        => $alamat,
-        'biaya'         => $biaya,
-        'status'        => 'menunggu'
-    ]);
+    foreach ($id_buku_list as $id_buku) {
+        $detailModel->insert([
+            'id_peminjaman' => $id_peminjaman,
+            'id_buku'       => $id_buku,
+            'jumlah'        => 1
+        ]);
+    }
 
-    // 🔥 SIMPAN KE TRANSAKSI
-    $db->table('transaksi')->insert([
-        'id_peminjaman' => $id_peminjaman,
-        'jenis'         => 'pengiriman',
-        'jumlah'        => $biaya
-    ]);
+    // =========================
+    // 🔥 KURANGI STOK (AMBIL SAJA)
+    // =========================
+    if ($metode == 'ambil') {
+        foreach ($id_buku_list as $id_buku) {
+            $db->table('buku')
+                ->where('id_buku', $id_buku)
+                ->set('tersedia', 'tersedia - 1', false)
+                ->update();
+        }
+    }
+
+    // =========================
+    // 🔥 PESAN SUCCESS
+    // =========================
+    if ($metode == 'ambil') {
+        $pesan = 'Buku berhasil dipinjam';
+    } else {
+        $pesan = 'Menunggu pengiriman';
+    }
+
+    return redirect()->to('/peminjaman')
+        ->with('success', $pesan);
 }
 
-    
-        $detailModel = new \App\Models\DetailPeminjamanModel();
-    
-        // 🔥 simpan detail buku
-        foreach ($id_buku_list as $id_buku) {
-            $detailModel->insert([
-                'id_peminjaman' => $id_peminjaman,
-                'id_buku'       => $id_buku,
-                'jumlah'        => 1
-            ]);
-        }
-    
-        return redirect()->to('/peminjaman')
-            ->with('success', 'Menunggu persetujuan admin');
-    }
-    
 
     // UPDATE
     public function update($id)
@@ -162,62 +195,102 @@ if ($metode == 'antar') {
         return redirect()->to('/peminjaman');
     }
 
-    // KEMBALIKAN
     public function kembalikan($id)
-{
-    $db = \Config\Database::connect();
-
-    $peminjamanModel = new \App\Models\PeminjamanModel();
-    $pengembalianModel = new \App\Models\PengembalianModel();
-
-    $peminjaman = $peminjamanModel->find($id);
-
-    // ❌ cegah kalau belum disetujui
-    if (!$peminjaman || !$peminjaman['tanggal_pinjam']) {
-        return redirect()->back()->with('error', 'Belum disetujui');
+    {
+        $db = \Config\Database::connect();
+    
+        $peminjamanModel   = new \App\Models\PeminjamanModel();
+        $pengembalianModel = new \App\Models\PengembalianModel();
+    
+        $peminjaman = $peminjamanModel->find($id);
+    
+        // ❌ validasi data tidak ada
+        if (!$peminjaman) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
+        }
+    
+        // ❌ belum dipinjam
+        if (!$peminjaman['tanggal_pinjam']) {
+            return redirect()->back()->with('error', 'Buku belum dipinjam');
+        }
+    
+        // ❌ cegah double klik
+        if ($peminjaman['status'] == 'dikembalikan') {
+            return redirect()->back()->with('error', 'Sudah dikembalikan');
+        }
+    
+        // =========================
+        // 🔥 TANGGAL
+        // =========================
+        $tanggal_dikembalikan = date('Y-m-d');
+        $tenggat = $peminjaman['tanggal_kembali'];
+    
+        // =========================
+        // 🔥 HITUNG DENDA PER HARI (2000)
+        // =========================
+        $tgl_kembali = strtotime($tanggal_dikembalikan);
+        $tgl_tenggat = strtotime($tenggat);
+        
+        // default 0 dulu (WAJIB)
+        $denda = 0;
+        
+        if ($tgl_kembali > $tgl_tenggat) {
+        
+            $selisih_detik = $tgl_kembali - $tgl_tenggat;
+            $selisih_hari  = ceil($selisih_detik / (60 * 60 * 24));
+        
+            $denda = $selisih_hari * 2000;
+        }
+        
+    
+        // =========================
+        // ✅ SIMPAN PENGEMBALIAN
+        // =========================
+        $pengembalianModel->save([
+            'id_peminjaman'        => $id,
+            'tanggal_dikembalikan' => $tanggal_dikembalikan,
+            'denda'                => $denda // ini sudah pasti 0 kalau tepat waktu
+        ]);
+        
+        // =========================
+        // 🔥 AMBIL DETAIL BUKU
+        // =========================
+        $detail = $db->table('detail_peminjaman')
+            ->where('id_peminjaman', $id)
+            ->get()
+            ->getResultArray();
+    
+        // =========================
+        // 🔥 TAMBAH STOK
+        // =========================
+        foreach ($detail as $d) {
+            $db->table('buku')
+                ->where('id_buku', $d['id_buku'])
+                ->set('tersedia', 'tersedia + ' . (int)$d['jumlah'], false)
+                ->update();
+        }
+    
+        // =========================
+        // ✅ UPDATE STATUS
+        // =========================
+        $peminjamanModel->update($id, [
+            'status' => 'dikembalikan'
+        ]);
+    
+        // =========================
+        // 🔥 PESAN DINAMIS
+        // =========================
+        if ($denda > 0) {
+            $pesan = 'Buku terlambat, denda Rp ' . number_format($denda, 0, ',', '.');
+        } else {
+            $pesan = 'Buku dikembalikan tepat waktu';
+        }
+    
+        return redirect()->to('/pengembalian')
+            ->with('success', $pesan);
     }
-
-    // ❌ cegah double klik
-    if ($peminjaman['status'] == 'dikembalikan') {
-        return redirect()->back()->with('error', 'Sudah dikembalikan');
-    }
-
-    $tanggal_kembali = date('Y-m-d');
-
-    // ✅ simpan pengembalian
-    $pengembalianModel->save([
-        'id_peminjaman'        => $id,
-        'tanggal_dikembalikan' => $tanggal_kembali,
-        'denda'                => 0
-    ]);
-
-    // 🔥 AMBIL DETAIL BUKU
-    $detail = $db->table('detail_peminjaman')
-        ->where('id_peminjaman', $id)
-        ->get()
-        ->getResultArray();
-
-    // ❗ DEBUG (sementara aktifkan kalau masih error)
-    // dd($detail);
-
-    // 🔥 TAMBAH STOK
-    foreach ($detail as $d) {
-        $db->table('buku')
-            ->where('id_buku', $d['id_buku'])
-            ->set('tersedia', 'tersedia + ' . (int)$d['jumlah'], false)
-            ->update();
-    }
-
-    // ✅ update status
-    $peminjamanModel->update($id, [
-        'status' => 'dikembalikan',
-        'tanggal_kembali' => $tanggal_kembali
-    ]);
-
-    return redirect()->to('/pengembalian')
-        ->with('success', 'Buku dikembalikan & stok bertambah');
-}
-
+    
+    
     // DETAIL
     public function detail($id)
     {
@@ -256,11 +329,12 @@ if ($metode == 'antar') {
         if (session()->get('role') != 'admin') {
             return redirect()->to('/peminjaman')->with('error', 'Tidak diizinkan');
         }
-
+    
         $this->peminjaman->delete($id);
-
-        return redirect()->to('/peminjaman');
+    
+        return redirect()->to('/peminjaman')->with('success', 'Data berhasil dihapus');
     }
+    
 
     // PRINT
     public function print($id)
@@ -285,59 +359,5 @@ if ($metode == 'antar') {
         $data['peminjaman'] = $builder->get()->getRowArray();
 
         return view('peminjaman/print', $data);
-    }
-    public function setujui($id)
-    {
-        $db = \Config\Database::connect();
-    
-        // 🔥 ambil semua buku yg dipinjam
-        $detail = $db->table('detail_peminjaman')
-            ->where('id_peminjaman', $id)
-            ->get()
-            ->getResultArray();
-    
-        // ❌ VALIDASI STOK DULU
-        foreach ($detail as $d) {
-            $buku = $db->table('buku')
-                ->where('id_buku', $d['id_buku'])
-                ->get()
-                ->getRowArray();
-    
-            if (!$buku || $buku['tersedia'] < $d['jumlah']) {
-                return redirect()->back()
-                    ->with('error', 'Stok buku "' . ($buku['judul'] ?? '-') . '" tidak cukup');
-            }
-        }
-    
-        // ✅ kalau stok aman → lanjut approve
-        $tanggal_pinjam = date('Y-m-d');
-        $tanggal_kembali = date('Y-m-d', strtotime('+5 days'));
-    
-        $this->peminjaman->update($id, [
-            'status' => 'dipinjam',
-            'tanggal_pinjam' => $tanggal_pinjam,
-            'tanggal_kembali' => $tanggal_kembali
-        ]);
-    
-        // 🔥 kurangi stok
-        foreach ($detail as $d) {
-            $db->table('buku')
-                ->where('id_buku', $d['id_buku'])
-                ->set('tersedia', 'tersedia - ' . (int)$d['jumlah'], false)
-                ->update();
-        }
-    
-        return redirect()->to('/peminjaman')
-            ->with('success', 'Peminjaman disetujui & stok berkurang');
-    }
-    
-    public function tolak($id)
-    {
-        $this->peminjaman->update($id, [
-            'status' => 'ditolak'
-        ]);
-
-        return redirect()->to('/peminjaman')
-            ->with('success', 'Peminjaman ditolak');
     }
 }

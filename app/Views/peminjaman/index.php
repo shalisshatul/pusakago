@@ -59,15 +59,34 @@
                 <?php endif; ?>
 
                 <!-- 🔥 SAMPAI (ANGGOTA) -->
-                <?php if (
-                    session()->get('role') == 'anggota' &&
-                    $p['metode'] == 'antar' &&
-                    ($p['status_pengiriman'] ?? '') == 'dikirim'
-                ): ?>
-                    | <a href="<?= base_url('pengiriman/sampai/' . $p['id_peminjaman']) ?>">
-                        <button>Sampai</button>
-                    </a>
-                <?php endif; ?>
+                <?php
+$db = \Config\Database::connect();
+$transaksi = $db->table('transaksi')
+    ->where('id_peminjaman', $p['id_peminjaman'])
+    ->where('jenis', 'pengiriman')
+    ->get()
+    ->getRowArray();
+?>
+
+<!-- 🔥 SAMPAI / BAYAR -->
+<?php if (
+    session()->get('role') == 'anggota' &&
+    $p['metode'] == 'antar' &&
+    ($p['status_pengiriman'] ?? '') == 'dikirim'
+): ?>
+
+    <?php if ($transaksi && $transaksi['status'] == 'belum_bayar'): ?>
+        |<a href="<?= base_url('transaksi/' . $p['id_peminjaman']) ?>">
+            <button style="background:red;color:white;">Bayar Ongkir</button>
+        </a>
+    <?php else: ?>
+        | <a href="<?= base_url('pengiriman/sampai/' . $p['id_peminjaman']) ?>">
+            <button>Sampai</button>
+        </a>
+    <?php endif; ?>
+
+<?php endif; ?>
+
 
                 <!-- 🔥 PENGEMBALIAN (ADMIN) -->
                 <?php if (
@@ -78,27 +97,16 @@
                         <button>Pengembalian</button>
                     </a>
                 <?php endif; ?>
+                <!-- 🔥 HAPUS (ADMIN SAJA) -->
+<?php if (session()->get('role') == 'admin'): ?>
+    | <a href="<?= base_url('peminjaman/delete/' . $p['id_peminjaman']) ?>"
+        onclick="return confirm('Yakin ingin menghapus data ini?')">
+        <button style="color:red;">Hapus</button>
+    </a>
+<?php endif; ?>
 
-                <!-- 🔥 SETUJUI / TOLAK -->
-                <?php if (in_array(session()->get('role'), ['admin', 'petugas']) && $p['status'] == 'menunggu'): ?>
-                    | <a href="<?= base_url('peminjaman/setujui/' . $p['id_peminjaman']) ?>">
-                        <button>Setujui</button>
-                    </a>
-                    | <a href="<?= base_url('peminjaman/tolak/' . $p['id_peminjaman']) ?>"
-                        onclick="return confirm('Tolak peminjaman ini?')">
-                        <button>Tolak</button>
-                    </a>
-                <?php endif; ?>
 
-                <!-- 🔥 HAPUS (ADMIN) -->
-                <?php if (session()->get('role') == 'admin'): ?>
-                    | <a href="<?= base_url('peminjaman/delete/' . $p['id_peminjaman']) ?>"
-                        onclick="return confirm('Hapus data?')">
-                        Hapus
-                    </a>
-                <?php endif; ?>
-
-            </td>
+        
         </tr>
     <?php endforeach; ?>
 </table>

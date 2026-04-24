@@ -56,5 +56,22 @@ class Pengembalian extends BaseController
         return redirect()->to('/pengembalian');
     }
     
-    
+    public function delete($id)
+{
+    // ❌ hanya admin
+    if (session()->get('role') != 'admin') {
+        return redirect()->back()->with('error', 'Tidak diizinkan');
+    }
+
+    $db = \Config\Database::connect();
+
+    // hapus data pengembalian
+    $db->table('pengembalian')
+        ->where('id_pengembalian', $id)
+        ->delete();
+
+    return redirect()->to('/pengembalian')
+        ->with('success', 'Data berhasil dihapus');
+}
+
 }

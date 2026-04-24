@@ -98,8 +98,10 @@ $routes->get('peminjaman/kembalikan/(:num)', 'Peminjaman::kembalikan/$1');
 $routes->get('peminjaman/delete/(:num)', 'Peminjaman::delete/$1');
 $routes->get('peminjaman/detail/(:num)', 'Peminjaman::detail/$1');
 $routes->get('peminjaman/print/(:num)', 'Peminjaman::print/$1');
-$routes->get('peminjaman/setujui/(:num)', 'Peminjaman::setujui/$1');
-$routes->get('peminjaman/tolak/(:num)', 'Peminjaman::tolak/$1');
+
+$routes->get('transaksi/(:num)', 'Transaksi::index/$1');
+$routes->post('transaksi/proses', 'Transaksi::prosesBayar');
+
 
 // PENGIRIMAN
 $routes->get('pengiriman/antar/(:num)', 'Pengiriman::antar/$1');
@@ -118,3 +120,13 @@ $routes->get('/restore', 'Restore::index');
 $routes->post('/restore/auth', 'Restore::auth');
 $routes->get('/restore/form', 'Restore::form');
 $routes->post('/restore/process', 'Restore::process');
+//
+// HALAMAN DENDA
+$routes->get('denda/(:num)', 'Denda::index/$1');
+
+// PROSES BAYAR DENDA
+$routes->post('denda/bayar', 'Denda::bayar');
+
+// DELETE (ADMIN)
+$routes->get('pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
+
