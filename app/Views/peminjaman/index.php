@@ -94,8 +94,10 @@ $transaksi = $db->table('transaksi')
                     $p['status'] == 'dipinjam'
                 ): ?>
                     | <a href="<?= base_url('pengembalian/create/' . $p['id_peminjaman']) ?>">
-                        <button>Pengembalian</button>
-                    </a>
+    <button>Pengembalian</button>
+</a>
+
+
                 <?php endif; ?>
                 <!-- 🔥 HAPUS (ADMIN SAJA) -->
 <?php if (session()->get('role') == 'admin'): ?>

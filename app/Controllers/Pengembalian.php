@@ -7,55 +7,90 @@ use App\Models\PengembalianModel;
 class Pengembalian extends BaseController
 {
     public function index()
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('pengembalian');
+    
+        $builder->select('
+            pengembalian.*,
+            users.nama,
+            peminjaman.tanggal_pinjam,
+            peminjaman.tanggal_kembali,
+            denda.status as status_denda
+        ');
+    
+        $builder->join('peminjaman', 'peminjaman.id_peminjaman = pengembalian.id_peminjaman');
+        $builder->join('users', 'users.id = peminjaman.id');
+        $builder->join('denda', 'denda.id_pengembalian = pengembalian.id_pengembalian', 'left');
+    
+        $builder->orderBy('pengembalian.id_pengembalian', 'DESC');
+    
+        $data['pengembalian'] = $builder->get()->getResultArray();
+    
+        return view('pengembalian/index', $data);
+    }
+    
+
+public function create($id)
 {
     $db = \Config\Database::connect();
 
-    $data['pengembalian'] = $db->table('pengembalian')
-        ->select('
-            pengembalian.*,
-            peminjaman.tanggal_pinjam,
-            peminjaman.tanggal_kembali,
-            users.nama
-        ')
-        ->join('peminjaman', 'peminjaman.id_peminjaman = pengembalian.id_peminjaman', 'left')
-        ->join('users', 'users.id = peminjaman.id', 'left')
+    $data['peminjaman'] = $db->table('peminjaman')
+        ->join('users', 'users.id = peminjaman.id')
+        ->where('id_peminjaman', $id)
         ->get()
-        ->getResultArray();
+        ->getRowArray();
 
-    return view('pengembalian/index', $data);
+    return view('pengembalian/create', $data);
 }
 
+public function store()
+{
+    $db = \Config\Database::connect();
 
-    public function create($id_peminjaman)
-    {
-        $data['id_peminjaman'] = $id_peminjaman;
+    $id = $this->request->getPost('id_peminjaman');
+    $tanggal_dikembalikan = $this->request->getPost('tanggal_dikembalikan');
 
-        return view('pengembalian/create', $data);
-    }
+    $peminjamanModel   = new \App\Models\PeminjamanModel();
+    $pengembalianModel = new \App\Models\PengembalianModel();
 
-    public function store()
-    {
-        $model = new \App\Models\PengembalianModel();
-    
-        $tanggal_dikembalikan = $this->request->getPost('tanggal_dikembalikan');
-        $tanggal_kembali = $this->request->getPost('tanggal_kembali');
-    
-        // hitung denda (contoh 1000 per hari telat)
-        $denda = 0;
-        if ($tanggal_dikembalikan > $tanggal_kembali) {
-            $telat = (strtotime($tanggal_dikembalikan) - strtotime($tanggal_kembali)) / 86400;
-            $denda = $telat * 1000;
+    $peminjaman = $peminjamanModel->find($id);
+
+    // =========================
+    // 🔥 HITUNG DENDA
+    // =========================
+    $denda = 0;
+
+    if ($peminjaman['tanggal_kembali']) {
+        $tgl_kembali = strtotime($tanggal_dikembalikan);
+        $tgl_tenggat = strtotime($peminjaman['tanggal_kembali']);
+
+        if ($tgl_kembali > $tgl_tenggat) {
+            $selisih = ceil(($tgl_kembali - $tgl_tenggat) / 86400);
+            $denda = $selisih * 2000;
         }
-    
-        $model->save([
-            'id_peminjaman' => $this->request->getPost('id_peminjaman'),
-            'tanggal_dikembalikan' => $tanggal_dikembalikan,
-            'denda' => $denda
-        ]);
-    
-        return redirect()->to('/pengembalian');
     }
-    
+
+    // =========================
+    // ✅ SIMPAN
+    // =========================
+    $pengembalianModel->save([
+        'id_peminjaman'        => $id,
+        'tanggal_dikembalikan' => $tanggal_dikembalikan,
+        'denda'                => $denda
+    ]);
+
+    // =========================
+    // 🔥 UPDATE STATUS
+    // =========================
+    $peminjamanModel->update($id, [
+        'status' => 'dikembalikan'
+    ]);
+
+    return redirect()->to('/pengembalian')
+        ->with('success', 'Pengembalian berhasil disimpan');
+}
+
     public function delete($id)
 {
     // ❌ hanya admin

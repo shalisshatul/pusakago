@@ -43,20 +43,23 @@ class BukuModel extends Model
         $builder->join('rak_buku', 'rak_buku.id_buku = buku.id_buku', 'left');
         $builder->join('rak', 'rak.id_rak = rak_buku.id_rak', 'left');
 
-        
-    if (!empty($keyword)) {
-        $builder->groupStart()
-            ->like('buku.judul', $keyword)
-            ->orLike('buku.isbn', $keyword)
-            ->orLike('kategori.nama_kategori', $keyword)
-            ->orLike('penulis.nama_penulis', $keyword)
-            ->orLike('penerbit.nama_penerbit', $keyword)
-            ->orLike('rak.nama_rak', $keyword)
-        ->groupEnd();
-    }
+        // 🔥 SEARCH
+        if (!empty($keyword)) {
+            $builder->groupStart()
+                ->like('buku.judul', $keyword)
+                ->orLike('buku.isbn', $keyword)
+                ->orLike('kategori.nama_kategori', $keyword)
+                ->orLike('penulis.nama_penulis', $keyword)
+                ->orLike('penerbit.nama_penerbit', $keyword)
+                ->orLike('rak.nama_rak', $keyword)
+            ->groupEnd();
+        }
 
-    return $builder->get()->getResultArray();
-}
+        // 🔥 PENTING: pastikan tidak double data karena join rak
+        $builder->groupBy('buku.id_buku');
+
+        return $builder->get()->getResultArray();
+    }
 
     // ======================
     // DETAIL BUKU

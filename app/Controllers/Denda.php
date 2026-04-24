@@ -21,27 +21,32 @@ class Denda extends BaseController
     public function bayar()
     {
         $db = \Config\Database::connect();
-
+    
         $id_pengembalian = $this->request->getPost('id_pengembalian');
         $jumlah = $this->request->getPost('jumlah_denda');
-
-        $file = $this->request->getFile('bukti');
-
-        if ($file && $file->isValid()) {
-            $namaFile = $file->getRandomName();
-            $file->move('uploads/', $namaFile);
-        } else {
-            return redirect()->back()->with('error', 'Upload bukti pembayaran');
+        $metode = $this->request->getPost('metode');
+    
+        $bukti = null;
+    
+        // jika QRIS upload bukti
+        if ($metode == 'qris') {
+            $file = $this->request->getFile('bukti');
+            if ($file && $file->isValid()) {
+                $bukti = $file->getRandomName();
+                $file->move('uploads/', $bukti);
+            }
         }
-
-        // simpan ke tabel denda
-        $db->table('denda')->insert([
-            'id_pengembalian' => $id_pengembalian,
-            'jumlah_denda'    => $jumlah,
-            'bukti_pembayaran'=> $namaFile
+    
+        // 🔥 SIMPAN / UPDATE DENDA
+        $db->table('denda')->where('id_pengembalian', $id_pengembalian)->update([
+            'jumlah_denda'      => $jumlah,
+            'bukti_pembayaran'  => $bukti,
+            'status'            => 'sudah_bayar' // 🔥 PENTING
         ]);
-
+    
         return redirect()->to('/pengembalian')
             ->with('success', 'Denda berhasil dibayar');
     }
+    
+
 }

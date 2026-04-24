@@ -194,7 +194,6 @@ class Peminjaman extends BaseController
 
         return redirect()->to('/peminjaman');
     }
-
     public function kembalikan($id)
     {
         $db = \Config\Database::connect();
@@ -204,65 +203,55 @@ class Peminjaman extends BaseController
     
         $peminjaman = $peminjamanModel->find($id);
     
-        // ❌ validasi data tidak ada
         if (!$peminjaman) {
             return redirect()->back()->with('error', 'Data tidak ditemukan');
         }
     
-        // ❌ belum dipinjam
-        if (!$peminjaman['tanggal_pinjam']) {
-            return redirect()->back()->with('error', 'Buku belum dipinjam');
-        }
-    
-        // ❌ cegah double klik
         if ($peminjaman['status'] == 'dikembalikan') {
             return redirect()->back()->with('error', 'Sudah dikembalikan');
         }
     
-        // =========================
-        // 🔥 TANGGAL
-        // =========================
+        // ======================
+        // TANGGAL
+        // ======================
         $tanggal_dikembalikan = date('Y-m-d');
         $tenggat = $peminjaman['tanggal_kembali'];
     
-        // =========================
-        // 🔥 HITUNG DENDA PER HARI (2000)
-        // =========================
-        $tgl_kembali = strtotime($tanggal_dikembalikan);
-        $tgl_tenggat = strtotime($tenggat);
-        
-        // default 0 dulu (WAJIB)
+        // ======================
+        // DENDA 2000 / HARI
+        // ======================
         $denda = 0;
-        
-        if ($tgl_kembali > $tgl_tenggat) {
-        
-            $selisih_detik = $tgl_kembali - $tgl_tenggat;
-            $selisih_hari  = ceil($selisih_detik / (60 * 60 * 24));
-        
-            $denda = $selisih_hari * 2000;
-        }
-        
     
-        // =========================
-        // ✅ SIMPAN PENGEMBALIAN
-        // =========================
+        if (!empty($tenggat)) {
+            $tgl_kembali = strtotime($tanggal_dikembalikan);
+            $tgl_tenggat = strtotime($tenggat);
+    
+            if ($tgl_kembali > $tgl_tenggat) {
+                $selisih_hari = ceil(($tgl_kembali - $tgl_tenggat) / 86400);
+                $denda = $selisih_hari * 2000;
+            }
+        }
+    
+        // ======================
+        // SIMPAN PENGEMBALIAN
+        // ======================
         $pengembalianModel->save([
             'id_peminjaman'        => $id,
             'tanggal_dikembalikan' => $tanggal_dikembalikan,
-            'denda'                => $denda // ini sudah pasti 0 kalau tepat waktu
+            'denda'                => $denda
         ]);
-        
-        // =========================
-        // 🔥 AMBIL DETAIL BUKU
-        // =========================
+    
+        // ======================
+        // AMBIL DETAIL BUKU
+        // ======================
         $detail = $db->table('detail_peminjaman')
             ->where('id_peminjaman', $id)
             ->get()
             ->getResultArray();
     
-        // =========================
-        // 🔥 TAMBAH STOK
-        // =========================
+        // ======================
+        // TAMBAH STOK BUKU
+        // ======================
         foreach ($detail as $d) {
             $db->table('buku')
                 ->where('id_buku', $d['id_buku'])
@@ -270,26 +259,16 @@ class Peminjaman extends BaseController
                 ->update();
         }
     
-        // =========================
-        // ✅ UPDATE STATUS
-        // =========================
+        // ======================
+        // UPDATE STATUS PEMINJAMAN
+        // ======================
         $peminjamanModel->update($id, [
             'status' => 'dikembalikan'
         ]);
     
-        // =========================
-        // 🔥 PESAN DINAMIS
-        // =========================
-        if ($denda > 0) {
-            $pesan = 'Buku terlambat, denda Rp ' . number_format($denda, 0, ',', '.');
-        } else {
-            $pesan = 'Buku dikembalikan tepat waktu';
-        }
-    
         return redirect()->to('/pengembalian')
-            ->with('success', $pesan);
+            ->with('success', 'Buku berhasil dikembalikan');
     }
-    
     
     // DETAIL
     public function detail($id)

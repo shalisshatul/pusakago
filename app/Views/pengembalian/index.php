@@ -25,12 +25,13 @@
 
                 <!-- 💰 DENDA -->
                 <td>
-                    <?php if (!empty($p['denda']) && $p['denda'] > 0): ?>
-                        Rp <?= number_format($p['denda'], 0, ',', '.') ?>
-                    <?php else: ?>
-                        -
-                    <?php endif; ?>
-                </td>
+<?php if (!empty($p['denda']) && $p['denda'] > 0): ?>
+    Rp <?= number_format($p['denda'], 0, ',', '.') ?>
+<?php else: ?>
+    0
+<?php endif; ?>
+</td>
+
 
                 <!-- 📌 STATUS -->
                 <td>
@@ -62,9 +63,17 @@
                         !empty($p['denda']) &&
                         $p['denda'] > 0
                     ): ?>
-                        | <a href="<?= base_url('denda/' . $p['id_pengembalian']) ?>">
-                            <button>Bayar Denda</button>
-                        </a>
+                        |<?php if (
+    session()->get('role') == 'anggota' &&
+    !empty($p['denda']) &&
+    $p['denda'] > 0 &&
+    ($p['status_denda'] ?? 'belum_bayar') != 'sudah_bayar'
+): ?>
+    | <a href="<?= base_url('denda/' . $p['id_pengembalian']) ?>">
+        <button>Bayar Denda</button>
+    </a>
+<?php endif; ?>
+
                     <?php endif; ?>
 
                 </td>

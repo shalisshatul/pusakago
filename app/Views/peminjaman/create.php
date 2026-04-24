@@ -22,6 +22,9 @@
             <h4 style="font-size:14px; margin:10px 0;">
                 <?= $b['judul'] ?>
             </h4>
+            <p style="font-size:12px;">
+    Stok: <b><?= $b['tersedia'] ?></b>
+</p>
 
             <button type="button" onclick="pilihBuku(<?= $b['id_buku'] ?>, '<?= $b['judul'] ?>')">
                 Pinjam
