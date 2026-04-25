@@ -1,39 +1,35 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h2>Pembayaran Ongkir</h2>
+<div class="container-fluid mt-3">
 
-<p><b>Total Ongkir:</b> Rp <?= number_format($transaksi['jumlah'], 0, ',', '.') ?></p>
-
-<form action="<?= base_url('transaksi/proses') ?>" method="post" enctype="multipart/form-data">
-
-
-    <input type="hidden" name="id_peminjaman" value="<?= $transaksi['id_peminjaman'] ?>">
-
-    <label>Metode Pembayaran:</label><br>
-    <input type="radio" name="metode" value="cash" required> Cash<br>
-    <input type="radio" name="metode" value="qris"> QRIS<br><br>
-
-    <!-- upload bukti -->
-    <div id="bukti_qris" style="display:none;">
-        <label>Upload Bukti (QRIS):</label><br>
-        <input type="file" name="bukti">
+    <div class="mb-3">
+        <h4 class="fw-bold">Pembayaran Ongkir</h4>
     </div>
 
-    <br>
-    <button type="submit">Bayar</button>
-</form>
+    <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
 
-<script>
-document.querySelectorAll('input[name="metode"]').forEach(el => {
-    el.addEventListener('change', function () {
-        if (this.value === 'qris') {
-            document.getElementById('bukti_qris').style.display = 'block';
-        } else {
-            document.getElementById('bukti_qris').style.display = 'none';
-        }
-    });
-});
-</script>
+            <h5 class="mb-3">Total Ongkir</h5>
+            <h3 class="fw-bold text-primary">
+                Rp <?= number_format($transaksi['jumlah'], 0, ',', '.') ?>
+            </h3>
+
+            <p class="text-muted mt-2">
+                Silakan klik tombol di bawah untuk melanjutkan pembayaran
+            </p>
+
+            <form action="<?= base_url('transaksi/proses') ?>" method="post">
+                <input type="hidden" name="id_peminjaman" value="<?= $transaksi['id_peminjaman'] ?>">
+
+                <button type="submit" class="btn btn-success mt-3">
+                    <i class="bi bi-credit-card"></i> Bayar Sekarang
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+</div>
 
 <?= $this->endSection() ?>

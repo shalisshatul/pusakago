@@ -28,7 +28,7 @@ class BukuModel extends Model
     public function getBuku($keyword = null)
     {
         $builder = $this->db->table('buku');
-
+    
         $builder->select('
             buku.*,
             kategori.nama_kategori,
@@ -36,13 +36,13 @@ class BukuModel extends Model
             penerbit.nama_penerbit,
             rak.nama_rak
         ');
-
+    
         $builder->join('kategori', 'kategori.id_kategori = buku.id_kategori', 'left');
         $builder->join('penulis', 'penulis.id_penulis = buku.id_penulis', 'left');
         $builder->join('penerbit', 'penerbit.id_penerbit = buku.id_penerbit', 'left');
         $builder->join('rak_buku', 'rak_buku.id_buku = buku.id_buku', 'left');
         $builder->join('rak', 'rak.id_rak = rak_buku.id_rak', 'left');
-
+    
         // 🔥 SEARCH
         if (!empty($keyword)) {
             $builder->groupStart()
@@ -54,33 +54,14 @@ class BukuModel extends Model
                 ->orLike('rak.nama_rak', $keyword)
             ->groupEnd();
         }
-
-        // 🔥 PENTING: pastikan tidak double data karena join rak
+    
+        // 🔥 FIX PENTING
         $builder->groupBy('buku.id_buku');
-
+    
+        // ⭐ TAMBAHAN PENTING (BIAR DATA TERLIHAT TERBARU)
+        $builder->orderBy('buku.id_buku', 'DESC');
+    
         return $builder->get()->getResultArray();
     }
-
-    // ======================
-    // DETAIL BUKU
-    // ======================
-    public function detail($id)
-    {
-        return $this->db->table('buku')
-            ->select('
-                buku.*,
-                kategori.nama_kategori,
-                penulis.nama_penulis,
-                penerbit.nama_penerbit,
-                rak.nama_rak
-            ')
-            ->join('kategori', 'kategori.id_kategori = buku.id_kategori', 'left')
-            ->join('penulis', 'penulis.id_penulis = buku.id_penulis', 'left')
-            ->join('penerbit', 'penerbit.id_penerbit = buku.id_penerbit', 'left')
-            ->join('rak_buku', 'rak_buku.id_buku = buku.id_buku', 'left')
-            ->join('rak', 'rak.id_rak = rak_buku.id_rak', 'left')
-            ->where('buku.id_buku', $id)
-            ->get()
-            ->getRowArray();
-    }
+    
 }

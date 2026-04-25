@@ -1,106 +1,117 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h2>Tambah Buku</h2>
+<div class="container mt-3">
 
-<form action="<?= base_url('buku/store') ?>" method="post" enctype="multipart/form-data">
+    <!-- HEADER -->
+    <div class="mb-4">
+        <h4 class="fw-bold mb-0">Tambah Buku</h4>
+        <small class="text-muted">Masukkan data buku baru ke sistem</small>
+    </div>
 
-    <fieldset>
-        <legend>Data Buku</legend>
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
 
-        <p>
-            <label>Judul Buku</label><br>
-            <input type="text" name="judul" required>
-        </p>
+            <form method="post" action="<?= base_url('buku/store') ?>" enctype="multipart/form-data">
 
-        <p>
-            <label>ISBN</label><br>
-            <input type="text" name="isbn">
-        </p>
+                <div class="row">
 
-        <p>
-            <label>Kategori</label><br>
-            <select name="id_kategori">
-                <option value="">-- Pilih Kategori --</option>
-                <?php foreach ($kategori as $k): ?>
-                    <option value="<?= $k['id_kategori'] ?>">
-                        <?= $k['nama_kategori'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select><br>
-            <input type="text" name="kategori_baru" placeholder="Tambah kategori baru">
-        </p>
+                    <!-- JUDUL -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Judul</label>
+                        <input type="text" name="judul" class="form-control" required>
+                    </div>
 
-        <p>
-            <label>Penulis</label><br>
-            <select name="id_penulis">
-                <option value="">-- Pilih Penulis --</option>
-                <?php foreach ($penulis as $p): ?>
-                    <option value="<?= $p['id_penulis'] ?>">
-                        <?= $p['nama_penulis'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select><br>
-            <input type="text" name="penulis_baru" placeholder="Tambah penulis baru">
-        </p>
+                    <!-- ISBN -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">ISBN</label>
+                        <input type="text" name="isbn" class="form-control">
+                    </div>
 
-        <p>
-            <label>Penerbit</label><br>
-            <select name="id_penerbit">
-                <option value="">-- Pilih Penerbit --</option>
-                <?php foreach ($penerbit as $p): ?>
-                    <option value="<?= $p['id_penerbit'] ?>">
-                        <?= $p['nama_penerbit'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select><br>
-            <input type="text" name="penerbit_baru" placeholder="Tambah penerbit baru">
-        </p>
-        <p>
-            <label>Rak</label><br>
-            <select name="id_rak">
-                <option value="">-- Pilih Rak --</option>
-                <?php foreach ($rak as $r): ?>
-                    <option value="<?= $r['id_rak'] ?>">
-                        <?= $r['nama_rak'] ?> - <?= $r['lokasi'] ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </p>
-        <p>
-            <label>Tahun Terbit</label><br>
-            <input type="number" name="tahun_terbit">
-        </p>
-       
-        <p>
-            <label>Deskripsi</label><br>
-            <textarea name="deskripsi" rows="3"></textarea>
-        </p>
+                    <!-- KATEGORI -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Kategori</label>
+                        <select name="id_kategori" class="form-select">
+                            <option value="">-- Pilih --</option>
+                            <?php foreach($kategori as $k): ?>
+                                <option value="<?= $k['id_kategori'] ?>">
+                                    <?= esc($k['nama_kategori']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-      
+                    <!-- PENULIS -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Penulis</label>
+                        <select name="id_penulis" class="form-select">
+                            <?php foreach($penulis as $p): ?>
+                                <option value="<?= $p['id_penulis'] ?>">
+                                    <?= esc($p['nama_penulis']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-        <p>
-            <label>Jumlah</label><br>
-            <input type="number" name="jumlah">
-        </p>
+                    <!-- PENERBIT -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Penerbit</label>
+                        <select name="id_penerbit" class="form-select">
+                            <?php foreach($penerbit as $p): ?>
+                                <option value="<?= $p['id_penerbit'] ?>">
+                                    <?= esc($p['nama_penerbit']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-        <p>
-            <label>Tersedia</label><br>
-            <input type="number" name="tersedia">
-        </p>
+                    <!-- RAK -->
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Rak</label>
+                        <select name="id_rak" class="form-select">
+                            <?php foreach($rak as $r): ?>
+                                <option value="<?= $r['id_rak'] ?>">
+                                    <?= esc($r['nama_rak']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
 
-        <p>
-            <label>Cover Buku</label><br>
-            <input type="file" name="cover">
-        </p>
+                    <!-- JUMLAH -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Jumlah</label>
+                        <input type="number" name="jumlah" class="form-control">
+                    </div>
 
-    </fieldset>
+                    <!-- TERSEDIA -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Tersedia</label>
+                        <input type="number" name="tersedia" class="form-control">
+                    </div>
 
-    <p>
-        <button type="submit">Simpan</button>
-        <a href="<?= base_url('buku') ?>">Kembali</a>
-    </p>
+                    <!-- COVER -->
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Cover</label>
+                        <input type="file" name="cover" class="form-control">
+                    </div>
 
-</form>
+                </div>
+
+                <!-- BUTTON -->
+                <div class="mt-3">
+                    <button class="btn btn-success">
+                        <i class="bi bi-check-lg"></i> Simpan
+                    </button>
+                    <a href="<?= base_url('buku') ?>" class="btn btn-secondary">
+                        Kembali
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
 
 <?= $this->endSection() ?>

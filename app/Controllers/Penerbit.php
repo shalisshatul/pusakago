@@ -6,39 +6,42 @@ use App\Models\PenerbitModel;
 class Penerbit extends BaseController
 {
     public function index()
-{
-    $model = new \App\Models\PenerbitModel();
+    {
+        $model = new PenerbitModel();
 
-    $keyword = $this->request->getGet('keyword');
+        $keyword = $this->request->getGet('keyword');
 
-    if ($keyword) {
-        $data['penerbit'] = $model
-            ->like('nama_penerbit', $keyword)
-            ->where('is_deleted', 0)
-            ->findAll();
-    } else {
-        $data['penerbit'] = $model
-            ->where('is_deleted', 0)
-            ->findAll();
+        $builder = $model->where('is_deleted', 0);
+
+        if ($keyword) {
+            $builder->like('nama_penerbit', $keyword);
+        }
+
+        $data['penerbit'] = $builder->findAll();
+
+        return view('penerbit/index', $data);
     }
 
-    return view('penerbit/index', $data);
-}
     public function store()
     {
-        $model = new \App\Models\PenerbitModel();
-    
+        $model = new PenerbitModel();
+
+        if (!$this->request->getPost('nama_penerbit')) {
+            return redirect()->back()->with('error', 'Nama penerbit wajib diisi');
+        }
+
         $model->insert([
             'nama_penerbit' => $this->request->getPost('nama_penerbit'),
-            'alamat' => $this->request->getPost('alamat')
+            'alamat'        => $this->request->getPost('alamat')
         ]);
-    
-        return redirect()->to('/penerbit');
+
+        return redirect()->to('/penerbit')->with('success', 'Data berhasil ditambahkan');
     }
 
     public function edit($id)
     {
         $model = new PenerbitModel();
+
         $data['penerbit'] = $model->find($id);
 
         return view('penerbit/edit', $data);
@@ -50,20 +53,20 @@ class Penerbit extends BaseController
 
         $model->update($id, [
             'nama_penerbit' => $this->request->getPost('nama_penerbit'),
-            'alamat' => $this->request->getPost('alamat')
+            'alamat'        => $this->request->getPost('alamat')
         ]);
 
         return redirect()->to('/penerbit');
     }
 
     public function delete($id)
-{
-    $model = new \App\Models\PenerbitModel();
+    {
+        $model = new PenerbitModel();
 
-    $model->update($id, [
-        'is_deleted' => 1
-    ]);
+        $model->update($id, [
+            'is_deleted' => 1
+        ]);
 
-    return redirect()->to('/penerbit');
-}
+        return redirect()->to('/penerbit');
+    }
 }

@@ -1,10 +1,40 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
-<h3>Tambah Penulis</h3>
 
-<form method="post" action="<?= base_url('penulis/store') ?>">
+<div class="container-fluid mt-3">
 
-    <input type="text" name="nama_penulis" placeholder="Nama penulis">
+    <div class="mb-3">
+        <h4 class="fw-bold">Tambah Penulis</h4>
+    </div>
 
-    <button type="submit">Simpan</button>
-</form><?= $this->endSection() ?>
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            <form method="post" action="<?= base_url('penulis/store') ?>">
+
+                <div class="mb-3">
+                    <label class="form-label">Nama Penulis</label>
+                    <input type="text" name="nama_penulis"
+                           class="form-control"
+                           placeholder="Masukkan nama penulis"
+                           required>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary">
+                        <i class="bi bi-save"></i> Simpan
+                    </button>
+
+                    <a href="<?= base_url('penulis') ?>" class="btn btn-secondary">
+                        Kembali
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<?= $this->endSection() ?>

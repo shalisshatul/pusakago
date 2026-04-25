@@ -10,7 +10,7 @@ class Pengembalian extends BaseController
     {
         $db = \Config\Database::connect();
         $builder = $db->table('pengembalian');
-
+    
         $builder->select('
             pengembalian.*,
             users.nama,
@@ -18,19 +18,18 @@ class Pengembalian extends BaseController
             peminjaman.tanggal_kembali,
             denda.status as status_denda
         ');
-
+    
         $builder->join('peminjaman', 'peminjaman.id_peminjaman = pengembalian.id_peminjaman');
         $builder->join('users', 'users.id = peminjaman.id');
         $builder->join('denda', 'denda.id_pengembalian = pengembalian.id_pengembalian', 'left');
-
+    
         $builder->orderBy('pengembalian.id_pengembalian', 'DESC');
-
+    
         $data['pengembalian'] = $builder->get()->getResultArray();
-
+    
         return view('pengembalian/index', $data);
     }
-
-
+    
     public function create($id)
     {
         $db = \Config\Database::connect();
@@ -128,4 +127,17 @@ class Pengembalian extends BaseController
         return redirect()->to('/pengembalian')
             ->with('success', 'Data berhasil dihapus');
     }
+    public function bayar($id)
+{
+    $db = \Config\Database::connect();
+
+    $db->table('pengembalian')
+        ->where('id_pengembalian', $id)
+        ->update([
+            'status_denda' => 'sudah_bayar'
+        ]);
+
+    return redirect()->back()->with('success', 'Denda sudah dibayar');
+}
+
 }

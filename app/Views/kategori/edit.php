@@ -1,15 +1,44 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
-<h3>Edit Kategori</h3>
 
-<form method="post" action="<?= base_url('kategori/update/'.$kategori['id_kategori']) ?>">
-    
-    <label>Nama Kategori</label><br>
+<div class="container-fluid mt-3">
 
-    <input type="text" name="nama_kategori" value="<?= $kategori['nama_kategori'] ?>" required>
+    <!-- HEADER -->
+    <div class="mb-3">
+        <h4 class="fw-bold">Edit Kategori</h4>
+        <small class="text-muted">Ubah data kategori</small>
+    </div>
 
-    <br><br>
+    <!-- CARD -->
+    <div class="card shadow-sm border-0" style="max-width:500px;">
+        <div class="card-body">
 
-    <button type="submit">Update</button>
-</form>
+            <form method="post" action="<?= base_url('kategori/update/'.$kategori['id_kategori']) ?>">
+
+                <div class="mb-3">
+                    <label class="form-label">Nama Kategori</label>
+                    <input type="text"
+                           name="nama_kategori"
+                           value="<?= $kategori['nama_kategori'] ?>"
+                           class="form-control"
+                           required>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="<?= base_url('kategori') ?>" class="btn btn-secondary">
+                        Kembali
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        Update
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
 <?= $this->endSection() ?>

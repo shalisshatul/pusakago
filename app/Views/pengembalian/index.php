@@ -1,91 +1,104 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<h2>Data Pengembalian</h2>
+<div class="container-fluid mt-3">
 
-<table border="1" cellpadding="8">
-    <tr>
-        <th>Nama Peminjam</th>
-        <th>Tanggal Pinjam</th>
-        <th>Tenggat</th>
-        <th>Tanggal Dikembalikan</th>
-        <th>Denda</th>
-        <th>Status</th>
-        <th>Aksi</th>
-    </tr>
+    <h4 class="fw-bold mb-3">Data Pengembalian</h4>
 
-    <?php if (!empty($pengembalian)): ?>
-        <?php foreach ($pengembalian as $p): ?>
-            <tr>
+    <div class="card shadow-sm border-0">
+        <div class="card-body table-responsive">
 
-                <td><?= $p['nama'] ?></td>
-                <td><?= $p['tanggal_pinjam'] ?? '-' ?></td>
-                <td><?= $p['tanggal_kembali'] ?? '-' ?></td>
-                <td><?= $p['tanggal_dikembalikan'] ?? '-' ?></td>
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nama</th>
+                        <th>Tgl Pinjam</th>
+                        <th>Tenggat</th>
+                        <th>Dikembalikan</th>
+                        <th>Denda</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
 
-                <!-- 💰 DENDA -->
-                <td>
-<?php if (!empty($p['denda']) && $p['denda'] > 0): ?>
-    Rp <?= number_format($p['denda'], 0, ',', '.') ?>
-<?php else: ?>
-    0
-<?php endif; ?>
-</td>
+                <tbody>
+                <?php if (!empty($pengembalian)): ?>
+                    <?php foreach ($pengembalian as $p): ?>
+                        <tr>
 
+                            <td><?= $p['nama'] ?></td>
+                            <td><?= $p['tanggal_pinjam'] ?? '-' ?></td>
+                            <td><?= $p['tanggal_kembali'] ?? '-' ?></td>
+                            <td><?= $p['tanggal_dikembalikan'] ?? '-' ?></td>
 
-                <!-- 📌 STATUS -->
-                <td>
-                    <?php if (!empty($p['tanggal_dikembalikan']) && !empty($p['tanggal_kembali'])): ?>
-                        <?php if (strtotime($p['tanggal_dikembalikan']) > strtotime($p['tanggal_kembali'])): ?>
-                            🔴 Terlambat
-                        <?php else: ?>
-                            🟢 Tepat Waktu
-                        <?php endif; ?>
-                    <?php else: ?>
-                        -
-                    <?php endif; ?>
-                </td>
+                            <!-- DENDA -->
+                            <td>
+                                <?php if (!empty($p['denda']) && $p['denda'] > 0): ?>
+                                    <span class="text-danger fw-bold">
+                                        Rp <?= number_format($p['denda'], 0, ',', '.') ?>
+                                    </span>
+                                <?php else: ?>
+                                    <span class="text-muted">0</span>
+                                <?php endif; ?>
+                            </td>
 
-                <!-- ⚙️ AKSI -->
-                <td>
+                            <!-- STATUS -->
+                            <td>
+                                <?php if (!empty($p['tanggal_dikembalikan']) && !empty($p['tanggal_kembali'])): ?>
+                                    <?php if (strtotime($p['tanggal_dikembalikan']) > strtotime($p['tanggal_kembali'])): ?>
+                                        <span class="badge bg-danger">Terlambat</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-success">Tepat Waktu</span>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary">-</span>
+                                <?php endif; ?>
+                            </td>
 
-                    <!-- 🔴 HAPUS (ADMIN) -->
-                    <?php if (session()->get('role') == 'admin'): ?>
-                        <a href="<?= base_url('pengembalian/delete/' . $p['id_pengembalian']) ?>"
-                           onclick="return confirm('Yakin ingin menghapus data ini?')">
-                            <button style="color:red;">Hapus</button>
-                        </a>
-                    <?php endif; ?>
+                            <!-- AKSI -->
+                            <td>
+                                <div class="d-flex gap-1">
 
-                    <!-- 💰 BAYAR DENDA (ANGGOTA & TERLAMBAT & BELUM DIBAYAR) -->
-                    <?php if (
-                        session()->get('role') == 'anggota' &&
-                        !empty($p['denda']) &&
-                        $p['denda'] > 0
-                    ): ?>
-                        |<?php if (
-    session()->get('role') == 'anggota' &&
-    !empty($p['denda']) &&
-    $p['denda'] > 0 &&
-    ($p['status_denda'] ?? 'belum_bayar') != 'sudah_bayar'
-): ?>
-    | <a href="<?= base_url('denda/' . $p['id_pengembalian']) ?>">
-        <button>Bayar Denda</button>
-    </a>
-<?php endif; ?>
+                                    <?php if (session()->get('role') == 'admin'): ?>
+                                        <a href="<?= base_url('pengembalian/delete/'.$p['id_pengembalian']) ?>"
+                                           onclick="return confirm('Yakin hapus?')"
+                                           class="btn btn-sm btn-danger">
+                                           <i class="bi bi-trash"></i>
+                                        </a>
+                                    <?php endif; ?>
 
-                    <?php endif; ?>
+                                    <?php if (session()->get('role') == 'anggota'): ?>
 
-                </td>
+                                        <?php if ($p['denda'] > 0 && $p['status_denda'] != 'sudah_bayar'): ?>
+                                            <a href="<?= base_url('denda/'.$p['id_pengembalian']) ?>"
+                                               class="btn btn-sm btn-warning text-white">
+                                                Bayar
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="badge bg-success">Lunas</span>
+                                        <?php endif; ?>
 
-            </tr>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="7" align="center">Belum ada data pengembalian</td>
-        </tr>
-    <?php endif; ?>
+                                    <?php endif; ?>
 
-</table>
+                                </div>
+                            </td>
+
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">
+                            Belum ada data
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
 
 <?= $this->endSection() ?>

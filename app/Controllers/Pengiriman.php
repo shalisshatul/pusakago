@@ -13,11 +13,12 @@ class Pengiriman extends BaseController
             ->update([
                 'status' => 'dikirim',
                 'tanggal_kirim' => date('Y-m-d'),
-                'id' => session()->get('id') // 🔥 petugas login
+                'petugas_id' => session()->get('id') // 🔥 ini yang penting
             ]);
     
         return redirect()->back()->with('success', 'Buku sedang dikirim');
     }
+    
     
     public function sampai($id)
     {

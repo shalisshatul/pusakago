@@ -1,50 +1,83 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
 
-<div>
+<div class="container-fluid mt-3">
 
-    <h3>Detail User</h3>
+    <!-- TITLE -->
+    <div class="mb-3">
+        <h4 class="fw-bold">Detail User</h4>
+    </div>
 
-    <table border="1" cellpadding="5" cellspacing="0">
-        <tr>
-            <td>Nama</td>
-            <td><?= $user['nama'] ?></td>
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td><?= $user['email'] ?></td>
-        </tr>
-        <tr>
-            <td>Username</td>
-            <td><?= $user['username'] ?></td>
-        </tr>
-        <tr>
-            <td>password</td>
-            <td>***</td>
-        </tr>
-        <tr>
-            <td>Role</td>
-            <td><?= ucfirst($user['role']) ?></td>
-        </tr>
-        <tr>
-            <td>Foto</td>
-            <td>
-                <?php if ($user['foto']): ?>
-                    <img src="<?= base_url('uploads/users/' . $user['foto']) ?>" width="100">
-                <?php else: ?>
-                    -
-                <?php endif; ?>
-            </td>
-        </tr>
-    </table>
+    <!-- CARD -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
 
-    <br>
+            <div class="row">
 
-    <a href="<?= base_url('users') ?>">Kembali</a>
+                <!-- FOTO -->
+                <div class="col-md-3 text-center mb-3">
+                    <?php if ($user['foto']): ?>
+                        <img src="<?= base_url('uploads/users/' . $user['foto']) ?>"
+                             class="rounded-circle shadow"
+                             width="120" height="120"
+                             style="object-fit: cover;">
+                    <?php else: ?>
+                        <div class="text-muted">Tidak ada foto</div>
+                    <?php endif; ?>
+                </div>
 
-    <?php if (session()->get('role') == 'admin') : ?>
-        <a href="<?= base_url('users/edit/' . $user['id']) ?>">Edit</a>
-    <?php endif; ?>
+                <!-- DATA -->
+                <div class="col-md-9">
+
+                    <table class="table table-borderless">
+                        <tr>
+                            <th width="150">Nama</th>
+                            <td><?= $user['nama'] ?></td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td><?= $user['email'] ?></td>
+                        </tr>
+                        <tr>
+                            <th>Username</th>
+                            <td><?= $user['username'] ?></td>
+                        </tr>
+                        <tr>
+                            <th>Password</th>
+                            <td>***</td>
+                        </tr>
+                        <tr>
+                            <th>Role</th>
+                            <td>
+                                <span class="badge bg-<?= 
+                                    $user['role'] == 'admin' ? 'danger' :
+                                    ($user['role'] == 'petugas' ? 'warning' : 'primary')
+                                ?>">
+                                    <?= ucfirst($user['role']) ?>
+                                </span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- BUTTON -->
+                    <div class="mt-3 d-flex gap-2">
+                        <a href="<?= base_url('users') ?>" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Kembali
+                        </a>
+
+                        <?php if (session()->get('role') == 'admin') : ?>
+                            <a href="<?= base_url('users/edit/' . $user['id']) ?>" class="btn btn-warning text-white">
+                                <i class="bi bi-pencil"></i> Edit
+                            </a>
+                        <?php endif; ?>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 
 </div>
 

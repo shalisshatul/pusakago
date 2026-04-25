@@ -19,34 +19,56 @@ class Denda extends BaseController
     }
 
     public function bayar()
-    {
-        $db = \Config\Database::connect();
-    
-        $id_pengembalian = $this->request->getPost('id_pengembalian');
-        $jumlah = $this->request->getPost('jumlah_denda');
-        $metode = $this->request->getPost('metode');
-    
-        $bukti = null;
-    
-        // jika QRIS upload bukti
-        if ($metode == 'qris') {
-            $file = $this->request->getFile('bukti');
-            if ($file && $file->isValid()) {
-                $bukti = $file->getRandomName();
-                $file->move('uploads/', $bukti);
-            }
-        }
-    
-        // 🔥 SIMPAN / UPDATE DENDA
-        $db->table('denda')->where('id_pengembalian', $id_pengembalian)->update([
-            'jumlah_denda'      => $jumlah,
-            'bukti_pembayaran'  => $bukti,
-            'status'            => 'sudah_bayar' // 🔥 PENTING
-        ]);
-    
-        return redirect()->to('/pengembalian')
-            ->with('success', 'Denda berhasil dibayar');
-    }
-    
+{
+    $db = \Config\Database::connect();
 
+    $id_pengembalian = $this->request->getPost('id_pengembalian');
+    $jumlah = $this->request->getPost('jumlah_denda');
+    $metode = $this->request->getPost('metode');
+
+    $bukti = null;
+
+    // 🔥 upload bukti jika QRIS
+    if ($metode == 'qris') {
+        $file = $this->request->getFile('bukti');
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $bukti = $file->getRandomName();
+            $file->move(FCPATH . 'uploads', $bukti);
+        }
+    }
+
+    // 🔥 CEK APAKAH DATA DENDA SUDAH ADA
+    $cek = $db->table('denda')
+        ->where('id_pengembalian', $id_pengembalian)
+        ->get()
+        ->getRow();
+
+    // 🔥 DATA YANG AKAN DISIMPAN
+    $data = [
+        'id_pengembalian'  => $id_pengembalian,
+        'jumlah_denda'     => $jumlah,
+        'metode'           => $metode,
+        'status'           => 'sudah_bayar'
+    ];
+
+    // hanya simpan bukti kalau ada
+    if ($bukti !== null) {
+        $data['bukti_pembayaran'] = $bukti;
+    }
+
+    // 🔥 INSERT / UPDATE (UPSERT)
+    if ($cek) {
+        $db->table('denda')
+            ->where('id_pengembalian', $id_pengembalian)
+            ->update($data);
+    } else {
+        $db->table('denda')->insert($data);
+    }
+
+    return redirect()->to('/pengembalian')
+        ->with('success', 'Denda berhasil dibayar');
+}
+
+    
 }

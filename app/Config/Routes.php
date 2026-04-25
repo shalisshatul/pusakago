@@ -43,7 +43,7 @@ $routes->get('users/wa/(:num)', 'Users::wa/$1', $allRole); // aksi kirim ke what
 // 🔍 Menampilkan semua buku (SEMUA ROLE)
 $routes->get('buku', 'Buku::index');
 
-//  DETAIL BUKU (SEMUA ROLE)
+// 🔍 Detail buku (SEMUA ROLE)
 $routes->get('buku/detail/(:num)', 'Buku::detail/$1');
 
 // ➕ Form tambah buku (ADMIN & PETUGAS)
@@ -92,6 +92,7 @@ $routes->get('rak/delete/(:num)', 'Rak::delete/$1');
 $routes->get('peminjaman', 'Peminjaman::index');
 $routes->get('peminjaman/create', 'Peminjaman::create');
 $routes->post('peminjaman/store', 'Peminjaman::store');
+$routes->get('peminjaman/setujui/(:num)', 'Peminjaman::setujui/$1');
 
 $routes->post('peminjaman/update/(:num)', 'Peminjaman::update/$1');
 $routes->get('peminjaman/kembalikan/(:num)', 'Peminjaman::kembalikan/$1');
@@ -101,6 +102,7 @@ $routes->get('peminjaman/print/(:num)', 'Peminjaman::print/$1');
 
 $routes->get('transaksi/(:num)', 'Transaksi::index/$1');
 $routes->post('transaksi/proses', 'Transaksi::prosesBayar');
+
 
 
 // PENGIRIMAN
@@ -130,3 +132,11 @@ $routes->post('denda/bayar', 'Denda::bayar');
 // DELETE (ADMIN)
 $routes->get('pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
 
+// PENARIKAN
+$routes->get('penarikan', 'Penarikan::index');
+$routes->get('penarikan/hapus/(:num)', 'Penarikan::hapus/$1');
+
+$routes->get('penarikan/proses/(:num)', 'Penarikan::proses/$1');
+$routes->get('penarikan/ambil/(:num)', 'Penarikan::ambil/$1');
+$routes->get('penarikan/selesai/(:num)', 'Penarikan::selesai/$1');
+$routes->get('penarikan/bayar/(:num)', 'Penarikan::bayar/$1');

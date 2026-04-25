@@ -1,43 +1,30 @@
-<?= $this->extend('layouts/main'); ?>
+<?= $this->extend('layouts/main') ?>
+<?= $this->section('content') ?>
 
-<?= $this->section('content'); ?>
+<div class="container mt-3">
 
-<div class="container mt-4">
-    <h3>Detail Buku</h3>
+<div class="card shadow-sm">
+<div class="card-body">
 
-    <?php if ($buku): ?>
-        <div class="card">
-            <div class="card-body">
-                <h4><?= esc($buku['judul']); ?></h4>
-                <hr>
+<h4><?= esc($buku['judul']) ?></h4>
+<hr>
 
-                <p><strong>Kategori:</strong> <?= esc($buku['nama_kategori']); ?></p>
-                <p><strong>Penulis:</strong> <?= esc($buku['nama_penulis']); ?></p>
-                <p><strong>Penerbit:</strong> <?= esc($buku['nama_penerbit']); ?></p>
-                <p><strong>Tahun Terbit:</strong> <?= esc($buku['tahun_terbit']); ?></p>
-                <p><strong>ISBN:</strong> <?= esc($buku['isbn']); ?></p>
-                <p><strong>Deskripsi:</strong><br><?= esc($buku['deskripsi']); ?></p>
+<p>Kategori: <?= esc($buku['nama_kategori']) ?></p>
+<p>Penulis: <?= esc($buku['nama_penulis']) ?></p>
+<p>Penerbit: <?= esc($buku['nama_penerbit']) ?></p>
+<p>Tahun: <?= esc($buku['tahun_terbit']) ?></p>
+<p>ISBN: <?= esc($buku['isbn']) ?></p>
 
-                <?php if (!empty($buku['cover'])): ?>
-                    <div class="mt-3">
-                        <img src="<?= base_url('uploads/buku/' . $buku['cover']); ?>" width="200">
-                    </div>
-                <?php endif; ?>
+<?php if($buku['cover']): ?>
+<img src="<?= base_url('uploads/buku/'.$buku['cover']) ?>" width="150">
+<?php endif; ?>
 
-                <div class="mt-4">
-                    <?php if ($from == 'dashboard'): ?>
-                        <a href="<?= base_url('dashboard'); ?>" class="btn btn-secondary">Kembali ke Dashboard</a>
-                    <?php else: ?>
-                        <a href="<?= base_url('buku'); ?>" class="btn btn-secondary">Kembali ke Daftar Buku</a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    <?php else: ?>
-        <div class="alert alert-danger">
-            Data buku tidak ditemukan.
-        </div>
-    <?php endif; ?>
+<br><br>
+<a href="<?= base_url('buku') ?>" class="btn btn-secondary">Kembali</a>
+
+</div>
 </div>
 
-<?= $this->endSection(); ?>
+</div>
+
+<?= $this->endSection() ?>

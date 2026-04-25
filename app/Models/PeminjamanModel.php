@@ -14,8 +14,10 @@ class PeminjamanModel extends Model
         'tanggal_kembali',
         'status',
         'id',
-        'id_buku',
-        'metode'
+        'metode',
+        'petugas_id'
     ];
+    
+    
     
 }
