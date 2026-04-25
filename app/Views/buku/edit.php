@@ -91,21 +91,20 @@
 
                     <!-- ✅ RAK (FIX ERROR DI SINI) -->
                     <div class="col-md-6 mb-3">
-                        <label>Rak</label>
-                        <select name="id_rak" class="form-control">
-                            <option value="">-- Pilih Rak --</option>
-                            <?php foreach ($rak as $r): ?>
-                                <option value="<?= $r['id_rak'] ?>"
-                                    <?= ($r['id_rak'] == ($buku['id_rak'] ?? '')) ? 'selected' : '' ?>>
-                                    <?= esc($r['nama_rak']) ?> - <?= esc($r['lokasi']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+    <label>Rak</label>
+    <select name="id_rak" class="form-control" required>
+        <option value="">-- Pilih Rak --</option>
 
-                        <input type="text" name="rak_baru"
-                               class="form-control mt-2"
-                               placeholder="Tambah rak baru">
-                    </div>
+        <?php foreach ($rak as $r): ?>
+            <option value="<?= $r['id_rak'] ?>"
+                <?= ($r['id_rak'] == ($buku['id_rak'] ?? '')) ? 'selected' : '' ?>>
+                <?= esc($r['nama_rak']) ?> - <?= esc($r['lokasi']) ?>
+            </option>
+        <?php endforeach; ?>
+
+    </select>
+</div>
+
 
                     <!-- TAHUN -->
                     <div class="col-md-4 mb-3">

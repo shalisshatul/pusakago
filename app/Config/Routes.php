@@ -53,6 +53,7 @@ $routes->get('buku/create', 'Buku::create', ['filter' => 'role:admin,petugas']);
 $routes->post('buku/store', 'Buku::store', ['filter' => 'role:admin,petugas']);
 
 // ✏️ Form edit buku (ADMIN & PETUGAS)
+
 $routes->get('buku/edit/(:num)', 'Buku::edit/$1', ['filter' => 'role:admin,petugas']);
 
 // 🔄 Update buku (ADMIN & PETUGAS)
@@ -140,3 +141,8 @@ $routes->get('penarikan/proses/(:num)', 'Penarikan::proses/$1');
 $routes->get('penarikan/ambil/(:num)', 'Penarikan::ambil/$1');
 $routes->get('penarikan/selesai/(:num)', 'Penarikan::selesai/$1');
 $routes->get('penarikan/bayar/(:num)', 'Penarikan::bayar/$1');
+//dashboard
+$routes->get('/', 'Dashboard::index', $authFilter);
+$routes->get('/dashboard', 'Dashboard::index', $authFilter);
+
+$routes->get('dashboard/stats', 'Dashboard::stats', $authFilter);

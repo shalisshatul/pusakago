@@ -33,15 +33,22 @@ class Pengembalian extends BaseController
     public function create($id)
     {
         $db = \Config\Database::connect();
-
+    
         $data['peminjaman'] = $db->table('peminjaman')
-            ->join('users', 'users.id = peminjaman.id')
-            ->where('id_peminjaman', $id)
+            ->join('users', 'users.id = peminjaman.id', 'left') // ✅ sesuai DB kamu
+            ->where('peminjaman.id_peminjaman', $id)
             ->get()
             ->getRowArray();
-
+    
+        // 🔥 biar tidak error
+        if (!$data['peminjaman']) {
+            return redirect()->to('/pengembalian')
+                ->with('error', 'Data tidak ditemukan');
+        }
+    
         return view('pengembalian/create', $data);
     }
+    
 
     public function store()
     {
