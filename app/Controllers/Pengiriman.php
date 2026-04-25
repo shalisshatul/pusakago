@@ -7,17 +7,18 @@ class Pengiriman extends BaseController
     public function antar($id)
     {
         $db = \Config\Database::connect();
-
+    
         $db->table('pengiriman')
             ->where('id_peminjaman', $id)
             ->update([
                 'status' => 'dikirim',
-                'tanggal_kirim' => date('Y-m-d')
+                'tanggal_kirim' => date('Y-m-d'),
+                'id' => session()->get('id') // 🔥 petugas login
             ]);
-
+    
         return redirect()->back()->with('success', 'Buku sedang dikirim');
     }
-
+    
     public function sampai($id)
     {
         $db = \Config\Database::connect();
