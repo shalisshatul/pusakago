@@ -182,7 +182,9 @@ $idu  = session('id');
         <a href="<?= base_url('buku') ?>">
             <i class="bi bi-book"></i> Buku
         </a>
-
+        <a href="<?= base_url('rak') ?>">
+            <i class="bi bi-grid"></i> Rak
+        </a>
         <a href="<?= base_url('peminjaman') ?>">
             <i class="bi bi-journal-text"></i> Peminjaman
         </a>
@@ -191,9 +193,7 @@ $idu  = session('id');
             <i class="bi bi-arrow-return-left"></i> Pengembalian
         </a>
 
-        <a href="<?= base_url('rak') ?>">
-            <i class="bi bi-grid"></i> Rak
-        </a>
+     
 
         <a href="<?= base_url('penarikan') ?>">
             <i class="bi bi-truck"></i> Penarikan
@@ -211,6 +211,15 @@ $idu  = session('id');
 
         <a href="<?= base_url('buku') ?>">
             <i class="bi bi-book"></i> Buku
+        </a>
+
+        <!-- 🔥 TAMBAHAN YANG KAMU MINTA -->
+        <a href="<?= base_url('peminjaman') ?>">
+            <i class="bi bi-journal-text"></i> Peminjaman
+        </a>
+
+        <a href="<?= base_url('pengembalian') ?>">
+            <i class="bi bi-arrow-return-left"></i> Pengembalian
         </a>
 
         <a href="<?= base_url('kategori') ?>">
@@ -234,7 +243,6 @@ $idu  = session('id');
         </a>
     </div>
 <?php endif; ?>
-
     <!-- USER -->
     <div class="menu-section">
         <div class="menu-title">Akun</div>

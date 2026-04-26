@@ -1,60 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
 
-    <!-- Bootstrap CSS -->
+    <!-- Bootstrap -->
     <link href="<?= base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/bootstrap-icons-1.13.1/bootstrap-icons.css') ?>" rel="stylesheet">
 
     <style>
         body {
-            background: linear-gradient(135deg, #e3f2fd, #ffffff);
+            margin: 0;
             font-family: "Segoe UI", sans-serif;
         }
 
-        .login-card {
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .login-header {
-            background: #0d6efd;
+        /* LEFT PANEL */
+        .left-panel {
+            background: linear-gradient(135deg, #42a5f5,rgb(91, 111, 141));
             color: white;
-            padding: 20px;
+            height: 100vh;
             text-align: center;
+            padding: 40px;
         }
 
-        .login-header h4 {
-            margin: 0;
+        .left-panel h1 {
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .left-panel p {
+            opacity: 0.9;
+        }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .login-box h4 {
             font-weight: 600;
         }
 
         .form-control {
-            border-radius: 8px;
+            border-radius: 25px;
+            padding: 10px 15px;
+        }
+
+        .input-group-text {
+            border-radius: 25px 0 0 25px;
+            background: white;
         }
 
         .btn-primary {
-            border-radius: 8px;
+            border-radius: 25px;
+            padding: 10px;
+        }
+
+        .form-link {
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .left-panel {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <div class="container d-flex justify-content-center align-items-center vh-100">
+<div class="container-fluid">
+    <div class="row">
 
-        <div class="card shadow login-card" style="width: 380px;">
+        <!-- LEFT SIDE -->
+        <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center left-panel">
+            <h1>WELCOME PUSAKAGO!</h1>
+            <p class="mt-3 px-5">
+            “Sistem peminjaman buku perpustakaan modern yang cepat, praktis, dan mudah digunakan”
+            </p>
+        </div>
 
-            <!-- HEADER -->
-            <div class="login-header">
-                <h4><i class="bi bi-book"></i> PusakaGo</h4>
-                <small>Sistem Perpustakaan</small>
-            </div>
+        <!-- RIGHT SIDE -->
+        <div class="col-md-6 right-panel">
 
-            <div class="card-body p-4">
+            <div class="login-box">
+
+                <h4 class="text-center mb-4">Login Account</h4>
 
                 <!-- ERROR -->
                 <?php if (session()->getFlashdata('error')): ?>
@@ -72,39 +112,37 @@
                 <!-- FORM -->
                 <form action="<?= base_url('/proses-login') ?>" method="post">
 
-                    <div class="mb-3">
-                        <label class="form-label">Username</label>
+                    <!-- USERNAME -->
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-person"></i>
+                        </span>
                         <input type="text" name="username"
                                class="form-control"
-                               placeholder="Masukkan username" required>
+                               placeholder="Username" required>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
+                    <!-- PASSWORD -->
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text">
+                            <i class="bi bi-lock"></i>
+                        </span>
                         <input type="password" name="password"
                                class="form-control"
-                               placeholder="Masukkan password" required>
+                               placeholder="Password" required>
                     </div>
 
+                    <!-- BUTTON -->
                     <button class="btn btn-primary w-100">
-                        <i class="bi bi-box-arrow-in-right"></i> Login
+                        Login
                     </button>
 
                 </form>
 
-                <!-- FOOTER -->
-                <div class="text-center mt-4">
-
-                    <a href="<?= base_url('users/create') ?>"
-                       class="btn btn-outline-success btn-sm me-1">
-                        <i class="bi bi-person-plus"></i> Daftar
-                    </a>
-
-                    <a href="<?= base_url('restore') ?>"
-                       class="btn btn-outline-danger btn-sm">
-                        <i class="bi bi-database"></i> Restore
-                    </a>
-
+                <!-- LINK -->
+                <div class="text-center mt-3 form-link">
+                    <a href="<?= base_url('users/create') ?>">Daftar</a> |
+                    <a href="<?= base_url('restore') ?>">Restore</a>
                 </div>
 
             </div>
@@ -112,8 +150,9 @@
         </div>
 
     </div>
+</div>
 
-    <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
+<script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
+
 </body>
-
 </html>

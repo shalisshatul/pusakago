@@ -1,123 +1,168 @@
-<!-- app/Views/users/create.php -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Tambah User</title>
 
+    <!-- Bootstrap -->
     <link href="<?= base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/bootstrap-icons-1.13.1/bootstrap-icons.css') ?>" rel="stylesheet">
 
     <style>
         body {
-            background: linear-gradient(135deg, #e3f2fd, #ffffff);
+            margin: 0;
             font-family: "Segoe UI", sans-serif;
         }
 
-        .form-card {
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .form-header {
-            background: #0d6efd;
+        /* LEFT PANEL */
+        .left-panel {
+            background: linear-gradient(135deg, #42a5f5,rgb(91, 111, 141));
             color: white;
-            padding: 20px;
+            height: 100vh;
             text-align: center;
+            padding: 40px;
         }
 
-        .form-header h5 {
-            margin: 0;
+        .left-panel h1 {
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .left-panel p {
+            opacity: 0.9;
+        }
+
+        /* RIGHT PANEL */
+        .right-panel {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .login-box h4 {
             font-weight: 600;
         }
 
-        .form-control,
-        .form-select {
-            border-radius: 8px;
+        .form-control {
+            border-radius: 25px;
+            padding: 10px 15px;
+        }
+
+        .input-group-text {
+            border-radius: 25px 0 0 25px;
+            background: white;
         }
 
         .btn-primary {
-            border-radius: 8px;
+            border-radius: 25px;
+            padding: 10px;
+        }
+
+        .form-link {
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .left-panel {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="container d-flex justify-content-center align-items-center vh-100">
+<div class="container-fluid">
+    <div class="row">
 
-    <div class="card shadow form-card" style="width: 380px;">
-
-        <!-- HEADER -->
-        <div class="form-header">
-            <h5><i class="bi bi-person-plus"></i> Tambah User</h5>
+        <!-- LEFT -->
+        <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center left-panel">
+        <h1>PUSAKAGO!</h1>   
+        <h1>DAFTAR AKUN BARU</h1>
+            <p class="mt-3 px-5">
+            “Sistem peminjaman buku perpustakaan modern yang cepat, praktis, dan mudah digunakan”
+            </p>
         </div>
 
-        <div class="card-body p-4">
+        <!-- RIGHT -->
+        <div class="col-md-6 right-panel">
 
-            <!-- ALERT -->
-            <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger">
-                    <?= session()->getFlashdata('error') ?>
+            <div class="form-box">
+
+                <h4 class="text-center mb-4">Tambah User</h4>
+
+                <!-- ERROR -->
+                <?php if (session()->getFlashdata('error')): ?>
+                    <div class="alert alert-danger">
+                        <?= session()->getFlashdata('error') ?>
+                    </div>
+                <?php endif; ?>
+
+                <!-- FORM -->
+                <form action="<?= base_url('users/store') ?>" method="post" enctype="multipart/form-data">
+
+                    <!-- NAMA -->
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" name="nama" class="form-control" placeholder="Nama" required>
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+
+                    <!-- USERNAME -->
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="Username" required>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="mb-3 input-group">
+                        <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+
+                    <!-- ROLE -->
+                    <div class="mb-3">
+                        <select name="role" class="form-select" required>
+                            <option value="">-- Pilih Role --</option>
+                            <option value="admin">Admin</option>
+                            <option value="petugas">Petugas</option>
+                            <option value="anggota">Anggota</option>
+                        </select>
+                    </div>
+
+                    <!-- FOTO -->
+                    <div class="mb-3">
+                        <input type="file" name="foto" class="form-control" accept="image/*">
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-save"></i> Simpan
+                    </button>
+
+                </form>
+
+                <!-- LINK -->
+                <div class="text-center mt-3 form-link">
+                    <a href="<?= base_url('login') ?>">Kembali ke Login</a>
                 </div>
-            <?php endif; ?>
 
-            <!-- FORM -->
-            <form action="<?= base_url('users/store') ?>" method="post" enctype="multipart/form-data">
-
-                <div class="mb-3">
-                    <label class="form-label">Nama</label>
-                    <input type="text" name="nama" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Role</label>
-                    <select name="role" class="form-select" required>
-                        <option value="">-- Pilih Role --</option>
-                        <option value="admin">Admin</option>
-                        <option value="petugas">Petugas</option>
-                        <option value="anggota">Anggota</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Foto</label>
-                    <input type="file" name="foto" class="form-control" accept="image/*">
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="bi bi-save"></i> Simpan
-                </button>
-
-            </form>
-
-            <!-- FOOTER -->
-            <div class="text-center mt-4">
-                <a href="<?= base_url('login') ?>" class="btn btn-outline-primary btn-sm">
-                    Kembali ke Login
-                </a>
             </div>
 
         </div>
 
     </div>
-
 </div>
 
 <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
