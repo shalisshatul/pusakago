@@ -1,5 +1,6 @@
 <?= $this->extend('layouts/main') ?>
 <?= $this->section('content') ?>
+
 <style>
     .foto-preview {
         width: 90px;
@@ -14,7 +15,28 @@
     .form-card {
         border-radius: 15px;
     }
+
+    /* 🔥 PERBAIKAN GAMBAR */
+    .cover-buku {
+        width: 100%;
+        height: 220px; /* semua sama tinggi */
+        object-fit: cover; /* biar tidak gepeng */
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    /* 🔥 BIAR CARD RAPI */
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: scale(1.03);
+    }
 </style>
+
 <div class="container-fluid mt-3">
 
     <h4 class="fw-bold mb-3">Pilih Buku</h4>
@@ -36,8 +58,9 @@
 
             <div class="card h-100 shadow-sm border-0">
 
+                <!-- 🔥 COVER SUDAH FIX -->
                 <img src="<?= base_url('uploads/buku/'.$b['cover']) ?>"
-                     class="card-img-top cover-buku">
+                     class="cover-buku">
 
                 <div class="card-body text-center">
 
@@ -54,7 +77,6 @@
                             Pinjam
                         </button>
 
-                        <!-- 🔥 UPDATED DETAIL BUTTON -->
                         <button class="btn btn-sm btn-outline-secondary"
                                 data-bs-toggle="modal"
                                 data-bs-target="#modalDetail"
@@ -139,7 +161,6 @@
                 <p><b>Penerbit:</b> <span id="detail_penerbit"></span></p>
                 <p><b>Tahun:</b> <span id="detail_tahun"></span></p>
 
-                <!-- 🔥 DESKRIPSI BARU -->
                 <p class="mt-2"><b>Deskripsi:</b></p>
                 <p id="detail_deskripsi" class="text-muted small"></p>
 

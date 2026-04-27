@@ -26,59 +26,43 @@ class Users extends BaseController
         return view('users/create');
     }
 
-    // Menyimpan data user baru
-    public function store()
-    {
-        // ================= VALIDASI =================
-        // Mengambil service validation dari CodeIgniter
-        $validation = \Config\Services::validation();
+   public function store()
+{
+    // ================= VALIDASI =================
+    $validation = \Config\Services::validation();
 
-        // Menentukan aturan validasi
-        $validation->setRules([
-            'nama'     => 'required', // wajib diisi
-            'email'    => 'required|valid_email', // wajib & format email valid
-            'username' => 'required|is_unique[users.username]', // unik di tabel users
-            'password' => 'required|min_length[4]', // minimal 4 karakter
-            'role'     => 'required', // wajib diisi
-        ]);
+    $validation->setRules([
+        'nama'     => 'required',
+        'email'    => 'required|valid_email',
+        'username' => 'required|is_unique[users.username]',
+        'password' => 'required|min_length[4]',
+    ]);
 
-        // Jika validasi gagal
-        if (!$validation->withRequest($this->request)->run()) {
-            // Kembali ke halaman sebelumnya + tampilkan error
-            return redirect()->back()->with('error', implode('<br>', $validation->getErrors()));
-        }
-
-        // ================= UPLOAD FOTO =================
-        // Mengambil file dari input name="foto"
-        $foto = $this->request->getFile('foto');
-
-        // Default nama foto null
-        $namaFoto = null;
-
-        // Jika ada file & valid & belum dipindahkan
-        if ($foto && $foto->isValid() && !$foto->hasMoved()) {
-            // Generate nama random untuk menghindari konflik nama file
-            $namaFoto = $foto->getRandomName();
-
-            // Pindahkan file ke folder public/uploads/users
-            $foto->move(FCPATH . 'uploads/users', $namaFoto);
-        }
-
-        // ================= SIMPAN DATA =================
-        $this->users->save([
-            'nama'     => $this->request->getPost('nama'), // ambil dari form
-            'email'    => $this->request->getPost('email'),
-            'username' => $this->request->getPost('username'),
-            // Password di-hash untuk keamanan
-            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'role'     => $this->request->getPost('role'),
-            'foto'     => $namaFoto // simpan nama file foto
-        ]);
-
-        // Redirect ke halaman login + pesan sukses
-        return redirect()->to('/login')->with('success', 'User berhasil ditambahkan!');
+    if (!$validation->withRequest($this->request)->run()) {
+        return redirect()->back()->with('error', implode('<br>', $validation->getErrors()));
     }
 
+    // ================= UPLOAD FOTO =================
+    $foto = $this->request->getFile('foto');
+    $namaFoto = null;
+
+    if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+        $namaFoto = $foto->getRandomName();
+        $foto->move(FCPATH . 'uploads/users', $namaFoto);
+    }
+
+    // ================= SIMPAN DATA =================
+    $this->users->save([
+        'nama'     => $this->request->getPost('nama'),
+        'email'    => $this->request->getPost('email'),
+        'username' => $this->request->getPost('username'),
+        'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+        'role'     => 'anggota', // ✅ AUTO JADI ANGGOTA
+        'foto'     => $namaFoto
+    ]);
+
+    return redirect()->to('/login')->with('success', 'Pendaftaran berhasil! Silakan login.');
+}
     // Menampilkan daftar user (dengan filter & pagination)
     public function index()
     {

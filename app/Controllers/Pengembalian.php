@@ -10,7 +10,7 @@ class Pengembalian extends BaseController
     {
         $db = \Config\Database::connect();
         $builder = $db->table('pengembalian');
-    
+
         $builder->select('
             pengembalian.*,
             users.nama,
@@ -18,37 +18,45 @@ class Pengembalian extends BaseController
             peminjaman.tanggal_kembali,
             denda.status as status_denda
         ');
-    
+
         $builder->join('peminjaman', 'peminjaman.id_peminjaman = pengembalian.id_peminjaman');
         $builder->join('users', 'users.id = peminjaman.id');
         $builder->join('denda', 'denda.id_pengembalian = pengembalian.id_pengembalian', 'left');
-    
+
+        // =========================
+        // 🔥 FILTER BERDASARKAN USER LOGIN
+        // =========================
+        $userId = session()->get('id');
+        $role   = session()->get('role');
+
+        if ($role == 'anggota') {
+            $builder->where('peminjaman.id', $userId);
+        }
+
         $builder->orderBy('pengembalian.id_pengembalian', 'DESC');
-    
+
         $data['pengembalian'] = $builder->get()->getResultArray();
-    
+
         return view('pengembalian/index', $data);
     }
-    
+
     public function create($id)
     {
         $db = \Config\Database::connect();
-    
+
         $data['peminjaman'] = $db->table('peminjaman')
-            ->join('users', 'users.id = peminjaman.id', 'left') // ✅ sesuai DB kamu
+            ->join('users', 'users.id = peminjaman.id', 'left')
             ->where('peminjaman.id_peminjaman', $id)
             ->get()
             ->getRowArray();
-    
-        // 🔥 biar tidak error
+
         if (!$data['peminjaman']) {
             return redirect()->to('/pengembalian')
                 ->with('error', 'Data tidak ditemukan');
         }
-    
+
         return view('pengembalian/create', $data);
     }
-    
 
     public function store()
     {
@@ -59,10 +67,12 @@ class Pengembalian extends BaseController
 
         $peminjamanModel   = new \App\Models\PeminjamanModel();
         $pengembalianModel = new \App\Models\PengembalianModel();
+
         $details = $db->table('detail_peminjaman')
             ->where('id_peminjaman', $id)
             ->get()
             ->getResultArray();
+
         $peminjaman = $peminjamanModel->find($id);
 
         // =========================
@@ -89,19 +99,19 @@ class Pengembalian extends BaseController
             'denda'                => $denda
         ]);
 
-
         // =========================
-        // 🔥 UPDATE STATUS
+        // 🔥 UPDATE STATUS PEMINJAMAN
         // =========================
         $peminjamanModel->update($id, [
             'status' => 'dikembalikan'
         ]);
 
-        // ✅ tambah stok tiap buku
+        // =========================
+        // 🔥 TAMBAH STOK BUKU
+        // =========================
         if (!empty($details)) {
             foreach ($details as $d) {
 
-                // pastikan field ada
                 if (!isset($d['id_buku'])) {
                     continue;
                 }
@@ -126,7 +136,6 @@ class Pengembalian extends BaseController
 
         $db = \Config\Database::connect();
 
-        // hapus data pengembalian
         $db->table('pengembalian')
             ->where('id_pengembalian', $id)
             ->delete();
@@ -134,17 +143,17 @@ class Pengembalian extends BaseController
         return redirect()->to('/pengembalian')
             ->with('success', 'Data berhasil dihapus');
     }
+
     public function bayar($id)
-{
-    $db = \Config\Database::connect();
+    {
+        $db = \Config\Database::connect();
 
-    $db->table('pengembalian')
-        ->where('id_pengembalian', $id)
-        ->update([
-            'status_denda' => 'sudah_bayar'
-        ]);
+        $db->table('pengembalian')
+            ->where('id_pengembalian', $id)
+            ->update([
+                'status_denda' => 'sudah_bayar'
+            ]);
 
-    return redirect()->back()->with('success', 'Denda sudah dibayar');
-}
-
+        return redirect()->back()->with('success', 'Denda sudah dibayar');
+    }
 }

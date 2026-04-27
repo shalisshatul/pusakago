@@ -131,15 +131,6 @@
                         <input type="password" name="password" class="form-control" placeholder="Password" required>
                     </div>
 
-                    <!-- ROLE -->
-                    <div class="mb-3">
-                        <select name="role" class="form-select" required>
-                            <option value="">-- Pilih Role --</option>
-                            <option value="admin">Admin</option>
-                            <option value="petugas">Petugas</option>
-                            <option value="anggota">Anggota</option>
-                        </select>
-                    </div>
 
                     <!-- FOTO -->
                     <div class="mb-3">
