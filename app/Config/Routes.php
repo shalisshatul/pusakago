@@ -143,10 +143,12 @@ $routes->get('penarikan/hapus/(:num)', 'Penarikan::hapus/$1');
 
 $routes->get('penarikan/proses/(:num)', 'Penarikan::proses/$1');
 $routes->get('penarikan/ambil/(:num)', 'Penarikan::ambil/$1');
-$routes->get('penarikan/selesai/(:num)', 'Penarikan::selesai/$1');
+$routes->post('penarikan/selesai/(:num)', 'Penarikan::selesai/$1');
 $routes->get('penarikan/bayar/(:num)', 'Penarikan::bayar/$1');
-//dashboard
+// dashboard
 $routes->get('/', 'Dashboard::index', $authFilter);
 $routes->get('/dashboard', 'Dashboard::index', $authFilter);
 
+// API realtime (WAJIB pakai auth)
 $routes->get('dashboard/stats', 'Dashboard::stats', $authFilter);
+$routes->get('dashboard/chart', 'Dashboard::chart', $authFilter);

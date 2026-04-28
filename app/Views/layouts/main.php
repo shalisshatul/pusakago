@@ -10,12 +10,17 @@
     <link href="<?= base_url('assets/bootstrap-icons-1.13.1/bootstrap-icons.css') ?>" rel="stylesheet">
 
     <style>
+        /* =========================
+        BODY (SAMAKAN LOGIN THEME)
+        ========================= */
         body {
             font-family: "Segoe UI", sans-serif;
-            background: #f4f7fb;
+            background: #ffffff;
         }
 
-        /* SIDEBAR */
+        /* =========================
+        SIDEBAR (DARK GLASS STYLE)
+        ========================= */
         .sidebar {
             width: 250px;
             height: 100vh;
@@ -23,22 +28,49 @@
             left: 0;
             top: 0;
 
-            background: #ffffff;
-            border-right: 1px solid #e9ecef;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            background: rgba(20, 38, 66, 0.75);
+            backdrop-filter: blur(12px);
+
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
 
             padding: 15px;
+
             display: flex;
             flex-direction: column;
+
+            color: white;
         }
 
-        /* CONTENT */
+        /* link sidebar default */
+        .sidebar a {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+
+        /* =========================
+        CONTENT AREA
+        ========================= */
         .content {
             margin-left: 250px;
             padding: 25px;
         }
 
-        /* RESPONSIVE */
+        /* =========================
+        RESPONSIVE
+        ========================= */
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
@@ -57,14 +89,17 @@
 
 <body>
 
+    <!-- SIDEBAR -->
     <div class="sidebar">
         <?= $this->include('layouts/menu') ?>
     </div>
 
+    <!-- CONTENT -->
     <div class="content">
         <?= $this->renderSection('content') ?>
     </div>
 
     <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
 </body>
+
 </html>

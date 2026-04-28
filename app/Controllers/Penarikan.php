@@ -20,23 +20,30 @@ class Penarikan extends BaseController
     {
         $db = \Config\Database::connect();
 
+        $role = session()->get('role');
+        $userId = session()->get('id');
+
         $builder = $db->table('penarikan');
 
         $builder->join('peminjaman', 'peminjaman.id_peminjaman = penarikan.id_peminjaman', 'left');
         $builder->join('users', 'users.id = penarikan.petugas_id', 'left');
 
         $builder->select('
-            penarikan.*,
-            peminjaman.tanggal_pinjam,
-            peminjaman.tanggal_kembali,
-            users.nama as nama_petugas
-        ');
+        penarikan.*,
+        peminjaman.tanggal_pinjam,
+        peminjaman.tanggal_kembali,
+        users.nama as nama_petugas
+    ');
+
+        // 🔥 FILTER KHUSUS ANGGOTA
+        if ($role == 'anggota') {
+            $builder->where('peminjaman.id', $userId);
+        }
 
         $data['penarikan'] = $builder->get()->getResultArray();
 
         return view('penarikan/index', $data);
     }
-
     // =====================
     // PROSES
     // =====================
@@ -70,18 +77,14 @@ class Penarikan extends BaseController
     {
         $db = \Config\Database::connect();
 
+        // ambil data penarikan
         $penarikan = $db->table('penarikan')
             ->where('id_penarikan', $id)
             ->get()
             ->getRowArray();
 
         if (!$penarikan) {
-            return redirect()->back();
-        }
-
-        // CEK PEMBAYARAN
-        if (($penarikan['status_bayar'] ?? '') != 'dibayar') {
-            return redirect()->back()->with('error', 'Belum dibayar!');
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
         }
 
         // =====================
@@ -103,7 +106,7 @@ class Penarikan extends BaseController
             ]);
 
         // =====================
-        // 3. INSERT PENGEMBALIAN (FIX SESUAI TABEL KAMU)
+        // 3. INSERT PENGEMBALIAN
         // =====================
         $db->table('pengembalian')->insert([
             'id_peminjaman' => $penarikan['id_peminjaman'],
@@ -127,7 +130,7 @@ class Penarikan extends BaseController
                 ->update();
         }
 
-        return redirect()->back()->with('success', 'Pengembalian berhasil & stok bertambah');
+        return redirect()->back()->with('success', 'Penarikan selesai & buku dikembalikan');
     }
 
     // =====================

@@ -86,10 +86,12 @@
 
                                     <!-- SELESAI -->
                                     <?php if (session()->get('role') == 'petugas' && $p['status'] == 'diambil'): ?>
-                                        <a href="<?= base_url('penarikan/selesai/' . $p['id_penarikan']) ?>"
-                                            class="btn btn-success">
-                                            Selesai
-                                        </a>
+                                        <form action="<?= base_url('penarikan/selesai/' . $p['id_penarikan']) ?>" method="post" style="display:inline;">
+                                            <?= csrf_field() ?>
+                                            <button class="btn btn-success">
+                                                Selesai
+                                            </button>
+                                        </form>
                                     <?php endif; ?>
 
                                     <!-- HAPUS -->

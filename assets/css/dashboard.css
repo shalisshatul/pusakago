@@ -1,57 +1,44 @@
-body {
-    background: #f5f7fb;
-    font-family: 'Segoe UI', sans-serif;
-}
-
-/* judul */
-.dashboard-title h4 {
-    font-weight: 700;
-    color: #2d3436;
-}
-
-/* card statistik */
+/* Card umum */
 .stat-card {
     border: none;
-    border-radius: 16px;
-    transition: all 0.3s ease;
-    overflow: hidden;
+    border-radius: 12px;
+    transition: 0.3s;
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
-/* isi card */
-.stat-card .card-body {
-    padding: 20px;
+/* Judul kecil */
+.stat-title {
+    font-size: 14px;
+    opacity: 0.9;
 }
 
-/* icon style */
+/* Icon */
 .stat-icon {
-    width: 50px;
-    height: 50px;
+    font-size: 28px;
+    opacity: 0.8;
+}
+
+/* Warna */
+.bg-blue {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.bg-green {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.bg-cyan {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.bg-dark {
+    background: linear-gradient(135deg, #374151, #111827);
+}
+
+/* Card biasa */
+.card {
     border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-}
-
-/* warna icon box */
-.bg-blue { background: rgba(13,110,253,0.1); color: #0d6efd; }
-.bg-warning-soft { background: rgba(255,193,7,0.15); color: #f39c12; }
-.bg-success-soft { background: rgba(25,135,84,0.15); color: #198754; }
-.bg-danger-soft { background: rgba(220,53,69,0.15); color: #dc3545; }
-
-/* angka */
-.stat-number {
-    font-size: 22px;
-    font-weight: bold;
-}
-
-/* subtitle */
-.stat-text {
-    font-size: 13px;
-    color: #6c757d;
 }
