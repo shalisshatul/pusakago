@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 25 Apr 2026 pada 22.32
+-- Waktu pembuatan: 28 Apr 2026 pada 12.54
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -46,13 +46,11 @@ CREATE TABLE `buku` (
 --
 
 INSERT INTO `buku` (`id_buku`, `isbn`, `judul`, `id_kategori`, `id_penulis`, `id_penerbit`, `tahun_terbit`, `jumlah`, `tersedia`, `deskripsi`, `cover`) VALUES
-(22, '30082008', 'pulang', 1, 4, 10, '2023', 10, 10, ': Menceritakan petualangan Bujang, seorang anak rimba Sumatra yang memiliki keberanian luar biasa dan direkrut oleh Tauke Besar ke kota. Ia dididik menjadi sosok yang pintar dan ahli bertarung hingga menjadi orang kepercayaan dalam keluarga penguasa shadow economy. Fokus ceritanya adalah perjuangan Bujang menghadapi masa lalu dan arti \"pulang\" ke jati diri yang sebenarnya. ', '1776668120_384f1f71c6bd2db5ac0f.webp'),
-(23, '3008203', 'bandung after rain', 1, 4, 20, '2014', 52, 38, 'Novel romansa setebal 282 halaman ini menceritakan kisah Hemachandra (Hema) yang penuh penyesalan setelah hubungannya dengan Rania (Ra) berakhir tepat sebulan sebelum hari jadi mereka yang ke-7. Berlatar di Kota Bandung yang melankolis, cerita ini mengeksplorasi tema kehilangan, jati diri, dan proses memahami arti cinta yang sesungguhnya.', '1776668210_bde0a5d41e47876bc997.jpg'),
-(25, '	6026064060', 'PISIKOTES TNI POLRI', 10, 17, 21, '2026', 15, 15, 'buku tes pisikotes terbaru tahun ini', '1776700159_7f0cffaa7c44bd31a438.png'),
+(22, '30082008', 'pulang', 1, 4, 10, '2023', 10, 9, ': Menceritakan petualangan Bujang, seorang anak rimba Sumatra yang memiliki keberanian luar biasa dan direkrut oleh Tauke Besar ke kota. Ia dididik menjadi sosok yang pintar dan ahli bertarung hingga menjadi orang kepercayaan dalam keluarga penguasa shadow economy. Fokus ceritanya adalah perjuangan Bujang menghadapi masa lalu dan arti \"pulang\" ke jati diri yang sebenarnya. ', '1776668120_384f1f71c6bd2db5ac0f.webp'),
+(23, '3008203', 'bandung after rain', 1, 4, 20, '2014', 52, 32, 'Novel romansa setebal 282 halaman ini menceritakan kisah Hemachandra (Hema) yang penuh penyesalan setelah hubungannya dengan Rania (Ra) berakhir tepat sebulan sebelum hari jadi mereka yang ke-7. Berlatar di Kota Bandung yang melankolis, cerita ini mengeksplorasi tema kehilangan, jati diri, dan proses memahami arti cinta yang sesungguhnya.', '1776668210_bde0a5d41e47876bc997.jpg'),
+(25, '	6026064060', 'PISIKOTES TNI POLRI', 10, 17, 21, '2026', 15, 12, 'buku tes pisikotes terbaru tahun ini', '1776700159_7f0cffaa7c44bd31a438.png'),
 (26, '978-602-5710-55-1', 'TOP No. 1 TKA (Tes Kemampuan Akademik) SMA/MA IPA 2025/2026', 11, 19, 22, '2025', 10, 10, 'Menggunakan metode pembelajaran bertahap, dilengkapi ringkasan materi padat serta ribuan soal drilling (latihan) beserta kunci jawaban dan pembahasan mendalam.', '1776700667_ebd797e21fe34e129d5e.avif'),
-(27, ' 978-623-8618-01-9', 'Buku Paten UTBK SNBT TPS 2025 (Tes Potensi Skolastik) Update Terbaru', 12, 20, 23, '2024', 20, 18, 'Buku ini berfokus pada 7 subtes TPS. Dilengkapi dengan Field Report (FR) soal asli 2023-2024, paket drilling soal, prediksi SNBT, bonus simulasi android, dan video bedah soal. Sangat cocok untuk penguatan dasar.', '1776701073_d806b1acbf5524194603.png'),
-(28, '30082006', 'tentang kamu', 1, 21, 10, '2021', 10, 9, '', '1777112200_c0f4cf271d275c593000.jpg'),
-(29, '6026064060', 'yang katanya cemara', 1, 22, 24, '0000', 10, 10, 'Buku ini bercerita tentang sisi lain kehidupan Vania Winola yang sering dianggap memiliki \"keluarga cemara\" oleh orang lain, namun sebenarnya menyimpan banyak luka dan perjuangan sendiri di baliknya. ', '1777148734_c814d537ec23f324c9f2.jpg');
+(27, ' 978-623-8618-01-9', 'Buku Paten UTBK SNBT TPS 2025 (Tes Potensi Skolastik) Update Terbaru', 12, 20, 23, '2024', 20, 16, 'Buku ini berfokus pada 7 subtes TPS. Dilengkapi dengan Field Report (FR) soal asli 2023-2024, paket drilling soal, prediksi SNBT, bonus simulasi android, dan video bedah soal. Sangat cocok untuk penguatan dasar.', '1776701073_d806b1acbf5524194603.png');
 
 -- --------------------------------------------------------
 
@@ -166,7 +164,21 @@ INSERT INTO `detail_peminjaman` (`id_detail`, `id_peminjaman`, `id_buku`, `jumla
 (172, 195, 23, 1),
 (173, 196, 23, 1),
 (174, 197, 23, 1),
-(175, 198, 23, 1);
+(175, 198, 23, 1),
+(176, 199, 23, 1),
+(177, 200, 23, 1),
+(178, 201, 25, 1),
+(179, 202, 22, 1),
+(180, 203, 23, 1),
+(181, 204, 25, 1),
+(182, 205, 23, 1),
+(183, 205, 27, 1),
+(184, 206, 25, 1),
+(185, 207, 23, 1),
+(186, 207, 27, 1),
+(187, 208, 25, 1),
+(188, 209, 23, 1),
+(189, 210, 23, 1);
 
 -- --------------------------------------------------------
 
@@ -232,11 +244,12 @@ CREATE TABLE `peminjaman` (
 --
 
 INSERT INTO `peminjaman` (`id_peminjaman`, `tanggal_pinjam`, `tanggal_kembali`, `status`, `id`, `metode`, `petugas_id`) VALUES
-(192, '2026-04-25', '2026-04-30', 'dikembalikan', 2, 'ambil', 3),
-(193, '2026-04-25', '2026-04-30', 'dikembalikan', 2, 'ambil', 3),
-(195, '2026-04-25', '2026-04-30', 'dikembalikan', NULL, 'ambil', 3),
-(197, '2026-04-25', '2026-04-30', 'dikembalikan', 8, 'ambil', 3),
-(198, '2026-04-25', '2026-04-30', 'dikembalikan', 2, 'antar', NULL);
+(205, '2026-04-28', '2026-05-03', 'dipinjam', 8, 'ambil', 3),
+(206, '2026-04-28', '2026-05-03', 'dipinjam', 8, 'ambil', 3),
+(207, '2026-04-28', '2026-05-03', 'dipinjam', 7, 'ambil', 3),
+(208, '2026-04-28', '2026-05-03', 'dikembalikan', 7, 'antar', NULL),
+(209, '2026-04-28', '2026-05-03', 'dipinjam', 7, 'antar', NULL),
+(210, '2026-04-28', '2026-05-03', 'dipinjam', 7, 'ambil', 3);
 
 -- --------------------------------------------------------
 
@@ -261,9 +274,10 @@ CREATE TABLE `penarikan` (
 --
 
 INSERT INTO `penarikan` (`id_penarikan`, `id_peminjaman`, `alamat`, `biaya`, `status`, `tanggal_ambil`, `petugas_id`, `ongkir`, `status_bayar`) VALUES
-(8, 190, 'cirawang', 10000.00, 'selesai', '2026-04-25', 3, 0, 'belum'),
-(9, 191, 'cirawang\r\n', 10000.00, 'selesai', '2026-04-25', 3, 0, 'belum'),
-(10, 198, 'ciakar', 10000.00, 'selesai', '2026-04-25', 3, 0, 'belum');
+(13, 201, 'sumedang', 10000.00, 'selesai', '2026-04-28', 3, 0, 'belum'),
+(15, 204, 'sumedang', 10000.00, 'selesai', '2026-04-28', 3, 0, 'belum'),
+(16, 208, 'talun', 10000.00, 'selesai', '2026-04-28', 3, 0, 'belum'),
+(17, 209, 'sumedang', 10000.00, 'menunggu', NULL, NULL, 0, 'belum');
 
 -- --------------------------------------------------------
 
@@ -316,9 +330,8 @@ CREATE TABLE `pengembalian` (
 --
 
 INSERT INTO `pengembalian` (`id_pengembalian`, `id_peminjaman`, `tanggal_dikembalikan`, `denda`, `status_denda`) VALUES
-(62, 197, '2026-04-26', 0.00, 'belum_bayar'),
-(63, 195, '2026-04-26', 0.00, 'belum_bayar'),
-(64, 193, '2026-04-26', 0.00, 'belum_bayar');
+(66, 208, '2026-04-29', 0.00, 'belum_bayar'),
+(67, 208, '2026-04-28', 0.00, 'belum_bayar');
 
 -- --------------------------------------------------------
 
@@ -379,7 +392,14 @@ INSERT INTO `pengiriman` (`id_pengiriman`, `id_peminjaman`, `alamat`, `biaya`, `
 (35, 189, 'ciwangsa', 10000.00, 'sampai', '2026-04-25', NULL, 3),
 (36, 190, 'cirawang', 10000.00, 'menunggu', NULL, NULL, NULL),
 (37, 191, 'cirawang\r\n', 10000.00, 'menunggu', NULL, NULL, NULL),
-(38, 198, 'ciakar', 10000.00, 'sampai', '2026-04-25', NULL, 3);
+(38, 198, 'ciakar', 10000.00, 'sampai', '2026-04-25', NULL, 3),
+(39, 199, 'sumedang', 10000.00, 'sampai', '2026-04-28', NULL, 3),
+(40, 200, 'sumedang', 10000.00, 'sampai', '2026-04-28', NULL, 3),
+(41, 201, 'sumedang', 10000.00, 'sampai', '2026-04-28', NULL, 3),
+(42, 202, 'sumedang', 10000.00, 'sampai', '2026-04-28', NULL, 3),
+(43, 204, 'sumedang', 10000.00, 'sampai', '2026-04-28', NULL, 3),
+(44, 208, 'talun', 10000.00, 'sampai', '2026-04-28', NULL, 3),
+(45, 209, 'sumedang', 10000.00, 'sampai', '2026-04-28', NULL, 3);
 
 -- --------------------------------------------------------
 
@@ -416,7 +436,8 @@ INSERT INTO `penulis` (`id_penulis`, `nama_penulis`, `is_deleted`) VALUES
 (19, 'Nada Salsabila, S.Pd.', 0),
 (20, 'Tim Tentor Paten', 0),
 (21, 'tere liye', 0),
-(22, 'vania winola', 0);
+(22, 'vania winola', 0),
+(23, 'siti', 1);
 
 -- --------------------------------------------------------
 
@@ -482,15 +503,17 @@ CREATE TABLE `transaksi` (
   `jenis` varchar(50) NOT NULL,
   `jumlah` decimal(10,2) NOT NULL,
   `tanggal` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('belum_bayar','sudah_bayar') DEFAULT 'belum_bayar'
+  `status` enum('belum_bayar','sudah_bayar') DEFAULT 'belum_bayar',
+  `bukti` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `transaksi`
 --
 
-INSERT INTO `transaksi` (`id_transaksi`, `id_peminjaman`, `jenis`, `jumlah`, `tanggal`, `status`) VALUES
-(33, 198, 'pengiriman', 10000.00, '2026-04-25 20:26:55', 'sudah_bayar');
+INSERT INTO `transaksi` (`id_transaksi`, `id_peminjaman`, `jenis`, `jumlah`, `tanggal`, `status`, `bukti`) VALUES
+(40, 208, 'pengiriman', 10000.00, '2026-04-28 10:31:57', 'sudah_bayar', NULL),
+(41, 209, 'pengiriman', 10000.00, '2026-04-28 10:35:55', 'sudah_bayar', NULL);
 
 -- --------------------------------------------------------
 
@@ -518,10 +541,9 @@ INSERT INTO `users` (`id`, `nama`, `email`, `username`, `password`, `role`, `fot
 (1, 'shalis', 'shalis', 'shalis', '$2y$10$FMQRdH0ecCbZZVWtN2n7/u1YZN/gr7X98Er4NG4sqDAWCXlZwmB6S', 'admin', '1775925135_1c4fe27cc17702005d2e.jpg', 'aktif', '2026-04-11 04:29:04'),
 (2, 'shatul', 'shatu@gmail.com', 'shatul', '$2y$10$FMQRdH0ecCbZZVWtN2n7/u1YZN/gr7X98Er4NG4sqDAWCXlZwmB6S', 'anggota', '1775925156_05e8f86175ed1e29324c.png', 'aktif', '2026-04-11 04:30:02'),
 (3, 'khoeriah', 'khoeriah', 'khoeriah', '$2y$10$FMQRdH0ecCbZZVWtN2n7/u1YZN/gr7X98Er4NG4sqDAWCXlZwmB6S', 'petugas', '1775925184_4825e8b3176aed4dc82c.jpg', 'aktif', '2026-04-11 04:30:50'),
-(5, 'nanda', 'shalis.shatul31@smk.belajar.id', 'nanda', '$2y$10$LJIB00OVcTMACmerQQaJOOusSxepHQgtBwRZxVbeJ5yItyDAXpo1i', 'admin', NULL, 'aktif', '2026-04-11 15:29:06'),
-(6, 'iis sadiyah', 'iis.sadiyah7@smk.belajar.id', 'iscntqjelita', '$2y$10$RGMaL5G3s6uayuqjkJoU4uiWRoULhCdXd6HIztTZ7Jx.pT0Es2kqC', 'anggota', '1775927871_d049127176194eb8e8bc.jpg', 'aktif', '2026-04-11 17:17:51'),
-(7, 'nanda', 'nanda@gmail.com', 'dede', '$2y$10$iuG.TrWT.zy0T8HtZeBCeukB0s/NUC6260fBGoTBLB12yBf51lt4a', 'anggota', '1776668836_2658f36bd2d9599ad1c1.jpg', 'aktif', '2026-04-20 07:07:17'),
-(8, 'iis sadiyah', 'iis@gmail.com', 'iis', '$2y$10$Dpcd./kAQSi7kCB1/8bf3uI1HyTKLlXnFEFFSLuRj9y/iopO1C3Jm', 'anggota', '1776790396_5ee416f412a0ae6863e0.jpg', 'aktif', '2026-04-21 16:51:31');
+(6, 'iis sadiyah', 'iis.sadiyah7@smk.belajar.id', 'iis', '$2y$10$RGMaL5G3s6uayuqjkJoU4uiWRoULhCdXd6HIztTZ7Jx.pT0Es2kqC', 'petugas', '1775927871_d049127176194eb8e8bc.jpg', 'aktif', '2026-04-11 17:17:51'),
+(7, 'nanda', 'nanda@gmail.com', 'dede', '$2y$10$pqwVdWw7VP41v7nhCbOfL.VRtazWvXMZN0WOYeJsGCD.HyYppRwCS', 'anggota', '1776668836_2658f36bd2d9599ad1c1.jpg', 'aktif', '2026-04-20 07:07:17'),
+(8, 'karisa wulan', 'karisa@gmail.com', 'karisa', '$2y$10$aYMq7S0EwoHzXT4SjTGR/.TZRdljC6bIu..IndQPwadUF8uLSf24y', 'anggota', '1777367189_a0125405d4c7406838c7.png', 'aktif', '2026-04-21 16:51:31');
 
 --
 -- Indexes for dumped tables
@@ -644,7 +666,7 @@ ALTER TABLE `denda`
 -- AUTO_INCREMENT untuk tabel `detail_peminjaman`
 --
 ALTER TABLE `detail_peminjaman`
-  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
+  MODIFY `id_detail` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=190;
 
 --
 -- AUTO_INCREMENT untuk tabel `kategori`
@@ -662,13 +684,13 @@ ALTER TABLE `log_aktivitas`
 -- AUTO_INCREMENT untuk tabel `peminjaman`
 --
 ALTER TABLE `peminjaman`
-  MODIFY `id_peminjaman` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=199;
+  MODIFY `id_peminjaman` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=211;
 
 --
 -- AUTO_INCREMENT untuk tabel `penarikan`
 --
 ALTER TABLE `penarikan`
-  MODIFY `id_penarikan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_penarikan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT untuk tabel `penerbit`
@@ -680,19 +702,19 @@ ALTER TABLE `penerbit`
 -- AUTO_INCREMENT untuk tabel `pengembalian`
 --
 ALTER TABLE `pengembalian`
-  MODIFY `id_pengembalian` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `id_pengembalian` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT untuk tabel `pengiriman`
 --
 ALTER TABLE `pengiriman`
-  MODIFY `id_pengiriman` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id_pengiriman` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT untuk tabel `penulis`
 --
 ALTER TABLE `penulis`
-  MODIFY `id_penulis` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_penulis` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT untuk tabel `rak`
@@ -710,7 +732,7 @@ ALTER TABLE `rak_buku`
 -- AUTO_INCREMENT untuk tabel `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_transaksi` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
