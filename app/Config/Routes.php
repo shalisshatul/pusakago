@@ -134,6 +134,10 @@ $routes->post('denda/bayar', 'Denda::bayar');
 $routes->get('pengembalian/delete/(:num)', 'Pengembalian::delete/$1');
 
 // PENARIKAN
+
+$routes->get('transaksi/bayar/(:num)', 'Transaksi::bayar/$1');
+$routes->post('transaksi/proses', 'Transaksi::proses');
+$routes->get('penarikan/detail/(:num)', 'Penarikan::detail/$1');
 $routes->get('penarikan', 'Penarikan::index');
 $routes->get('penarikan/hapus/(:num)', 'Penarikan::hapus/$1');
 

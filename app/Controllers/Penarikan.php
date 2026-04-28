@@ -79,21 +79,55 @@ class Penarikan extends BaseController
             return redirect()->back();
         }
 
-        // update penarikan
+        // CEK PEMBAYARAN
+        if (($penarikan['status_bayar'] ?? '') != 'dibayar') {
+            return redirect()->back()->with('error', 'Belum dibayar!');
+        }
+
+        // =====================
+        // 1. UPDATE PENARIKAN
+        // =====================
         $db->table('penarikan')
             ->where('id_penarikan', $id)
             ->update([
                 'status' => 'selesai'
             ]);
 
-        // update peminjaman jadi dikembalikan
+        // =====================
+        // 2. UPDATE PEMINJAMAN
+        // =====================
         $db->table('peminjaman')
             ->where('id_peminjaman', $penarikan['id_peminjaman'])
             ->update([
                 'status' => 'dikembalikan'
             ]);
 
-        return redirect()->back()->with('success', 'Penarikan selesai');
+        // =====================
+        // 3. INSERT PENGEMBALIAN (FIX SESUAI TABEL KAMU)
+        // =====================
+        $db->table('pengembalian')->insert([
+            'id_peminjaman' => $penarikan['id_peminjaman'],
+            'tanggal_dikembalikan' => date('Y-m-d'),
+            'denda' => 0,
+            'status_denda' => 'belum_bayar'
+        ]);
+
+        // =====================
+        // 4. TAMBAH STOK BUKU
+        // =====================
+        $peminjaman = $db->table('peminjaman')
+            ->where('id_peminjaman', $penarikan['id_peminjaman'])
+            ->get()
+            ->getRowArray();
+
+        if ($peminjaman && isset($peminjaman['id_buku'])) {
+            $db->table('buku')
+                ->where('id_buku', $peminjaman['id_buku'])
+                ->set('stok', 'stok+1', false)
+                ->update();
+        }
+
+        return redirect()->back()->with('success', 'Pengembalian berhasil & stok bertambah');
     }
 
     // =====================
@@ -112,5 +146,29 @@ class Penarikan extends BaseController
             ->delete();
 
         return redirect()->back()->with('success', 'Data dihapus');
+    }
+    public function detail($id)
+    {
+        $data['penarikan'] = $this->penarikan
+            ->select('
+            penarikan.*,
+            anggota.nama as nama_anggota,
+            petugas.nama as nama_petugas,
+            transaksi.bukti,
+            transaksi.jumlah as jumlah_bayar
+        ')
+            ->join('peminjaman', 'peminjaman.id_peminjaman = penarikan.id_peminjaman', 'left')
+
+            // ✔️ FIX: relasi user (anggota)
+            ->join('users as anggota', 'anggota.id = peminjaman.id', 'left')
+
+            // ✔️ FIX: relasi petugas
+            ->join('users as petugas', 'petugas.id = penarikan.petugas_id', 'left')
+
+            ->join('transaksi', 'transaksi.id_peminjaman = penarikan.id_peminjaman', 'left')
+            ->where('penarikan.id_penarikan', $id)
+            ->first();
+
+        return view('penarikan/detail', $data);
     }
 }

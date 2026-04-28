@@ -5,17 +5,21 @@
     .card-custom {
         border-radius: 16px;
     }
+
     .table thead th {
         font-size: 13px;
         text-transform: uppercase;
         letter-spacing: .5px;
     }
+
     .badge {
         font-size: 12px;
     }
+
     .btn-sm {
         border-radius: 8px;
     }
+
     .table tbody tr:hover {
         background: #f8f9fa;
         transition: 0.2s;
@@ -66,133 +70,133 @@
                         <?php if (!empty($peminjaman)): ?>
 
                             <?php foreach ($peminjaman as $p): ?>
-                            <tr>
+                                <tr>
 
-                                <!-- NAMA -->
-                                <td class="ps-4">
-                                    <div class="fw-semibold"><?= $p['nama'] ?></div>
-                                </td>
+                                    <!-- NAMA -->
+                                    <td class="ps-4">
+                                        <div class="fw-semibold"><?= $p['nama'] ?></div>
+                                    </td>
 
-                                <!-- TANGGAL -->
-                                <td><?= $p['tanggal_pinjam'] ?? '-' ?></td>
-                                <td><?= $p['tanggal_kembali'] ?? '-' ?></td>
+                                    <!-- TANGGAL -->
+                                    <td><?= $p['tanggal_pinjam'] ?? '-' ?></td>
+                                    <td><?= $p['tanggal_kembali'] ?? '-' ?></td>
 
-                                <!-- STATUS -->
-                                <td>
-                                    <?php
-                                    $status = $p['status'];
-
-                                    if ($status == 'menunggu') {
-                                        $warna = 'warning';
-                                    } elseif ($status == 'dipinjam') {
-                                        $warna = 'primary';
-                                    } elseif ($status == 'dikembalikan') {
-                                        $warna = 'success';
-                                    } elseif ($status == 'ditolak') {
-                                        $warna = 'danger';
-                                    } else {
-                                        $warna = 'secondary';
-                                    }
-                                    ?>
-                                    <span class="badge bg-<?= $warna ?> px-3 py-2">
-                                        <?= ucfirst($status) ?>
-                                    </span>
-                                </td>
-
-                                <!-- PETUGAS -->
-                                <td class="text-muted">
-                                    <?= $p['nama_petugas'] ?? $p['nama_petugas_kirim'] ?? '-' ?>
-                                </td>
-
-                                <!-- AKSI -->
-                                <td class="text-center">
-                                    <div class="d-flex flex-wrap gap-1 justify-content-center">
-
-                                        <!-- DETAIL -->
-                                        <a href="<?= base_url('peminjaman/detail/' . $p['id_peminjaman']) ?>"
-                                           class="btn btn-sm btn-info text-white">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-
-                                        <!-- SETUJUI -->
-                                        <?php if (
-                                            session()->get('role') == 'petugas' &&
-                                            $p['status'] == 'menunggu' &&
-                                            $p['metode'] == 'ambil'
-                                        ): ?>
-                                            <a href="<?= base_url('peminjaman/setujui/' . $p['id_peminjaman']) ?>"
-                                               class="btn btn-sm btn-success">
-                                               Setujui
-                                            </a>
-                                        <?php endif; ?>
-
-                                        <!-- ANTAR -->
-                                        <?php if (
-                                            session()->get('role') == 'petugas' &&
-                                            $p['metode'] == 'antar' &&
-                                            ($p['status_pengiriman'] == 'menunggu' || $p['status_pengiriman'] == '-')
-                                        ): ?>
-                                            <a href="<?= base_url('pengiriman/antar/' . $p['id_peminjaman']) ?>"
-                                               class="btn btn-sm btn-warning">
-                                               Antar
-                                            </a>
-                                        <?php endif; ?>
-
-                                        <!-- CEK TRANSAKSI -->
+                                    <!-- STATUS -->
+                                    <td>
                                         <?php
-                                        $db = \Config\Database::connect();
-                                        $transaksi = $db->table('transaksi')
-                                            ->where('id_peminjaman', $p['id_peminjaman'])
-                                            ->where('jenis', 'pengiriman')
-                                            ->get()
-                                            ->getRowArray();
+                                        $status = $p['status'];
+
+                                        if ($status == 'menunggu') {
+                                            $warna = 'warning';
+                                        } elseif ($status == 'dipinjam') {
+                                            $warna = 'primary';
+                                        } elseif ($status == 'dikembalikan') {
+                                            $warna = 'success';
+                                        } elseif ($status == 'ditolak') {
+                                            $warna = 'danger';
+                                        } else {
+                                            $warna = 'secondary';
+                                        }
                                         ?>
+                                        <span class="badge bg-<?= $warna ?> px-3 py-2">
+                                            <?= ucfirst($status) ?>
+                                        </span>
+                                    </td>
 
-                                        <!-- BAYAR / SAMPAI -->
-                                        <?php if (
-                                            session()->get('role') == 'anggota' &&
-                                            $p['metode'] == 'antar' &&
-                                            ($p['status_pengiriman'] ?? '') == 'dikirim'
-                                        ): ?>
+                                    <!-- PETUGAS -->
+                                    <td class="text-muted">
+                                        <?= $p['nama_petugas'] ?? $p['nama_petugas_kirim'] ?? '-' ?>
+                                    </td>
 
-                                            <?php if ($transaksi && $transaksi['status'] == 'belum_bayar'): ?>
-                                                <a href="<?= base_url('transaksi/' . $p['id_peminjaman']) ?>"
-                                                   class="btn btn-sm btn-danger">
-                                                   Bayar
-                                                </a>
-                                            <?php else: ?>
-                                                <a href="<?= base_url('pengiriman/sampai/' . $p['id_peminjaman']) ?>"
-                                                   class="btn btn-sm btn-primary">
-                                                   Sampai
+                                    <!-- AKSI -->
+                                    <td class="text-center">
+                                        <div class="d-flex flex-wrap gap-1 justify-content-center">
+
+                                            <!-- DETAIL -->
+                                            <a href="<?= base_url('peminjaman/detail/' . $p['id_peminjaman']) ?>"
+                                                class="btn btn-sm btn-info text-white">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+
+                                            <!-- SETUJUI -->
+                                            <?php if (
+                                                session()->get('role') == 'petugas' &&
+                                                $p['status'] == 'menunggu' &&
+                                                $p['metode'] == 'ambil'
+                                            ): ?>
+                                                <a href="<?= base_url('peminjaman/setujui/' . $p['id_peminjaman']) ?>"
+                                                    class="btn btn-sm btn-success">
+                                                    Setujui
                                                 </a>
                                             <?php endif; ?>
 
-                                        <?php endif; ?>
+                                            <!-- ANTAR -->
+                                            <?php if (
+                                                session()->get('role') == 'petugas' &&
+                                                $p['metode'] == 'antar' &&
+                                                ($p['status_pengiriman'] == 'menunggu' || $p['status_pengiriman'] == '-')
+                                            ): ?>
+                                                <a href="<?= base_url('pengiriman/antar/' . $p['id_peminjaman']) ?>"
+                                                    class="btn btn-sm btn-warning">
+                                                    Antar
+                                                </a>
+                                            <?php endif; ?>
 
-                                        <!-- PENGEMBALIAN -->
-                                        <?php if (
-                                            session()->get('role') == 'admin' &&
-                                            $p['status'] == 'dipinjam'
-                                        ): ?>
-                                            <a href="<?= base_url('pengembalian/create/' . $p['id_peminjaman']) ?>"
-                                               class="btn btn-sm btn-secondary">
-                                               Kembali
-                                            </a>
-                                        <?php endif; ?>
+                                            <!-- CEK TRANSAKSI -->
+                                            <?php
+                                            $db = \Config\Database::connect();
+                                            $transaksi = $db->table('transaksi')
+                                                ->where('id_peminjaman', $p['id_peminjaman'])
+                                                ->where('jenis', 'pengiriman')
+                                                ->get()
+                                                ->getRowArray();
+                                            ?>
 
-                                        <!-- HAPUS -->
-                                        <?php if (session()->get('role') == 'admin'): ?>
-                                            <a href="<?= base_url('peminjaman/delete/' . $p['id_peminjaman']) ?>"
-                                               onclick="return confirm('Yakin ingin menghapus data ini?')"
-                                               class="btn btn-sm btn-outline-danger">
-                                               <i class="bi bi-trash"></i>
-                                            </a>
-                                        <?php endif; ?>
+                                            <!-- BAYAR / SAMPAI -->
+                                            <?php if (
+                                                session()->get('role') == 'anggota' &&
+                                                $p['metode'] == 'antar' &&
+                                                ($p['status_pengiriman'] ?? '') == 'dikirim'
+                                            ): ?>
 
-                                    </div>
-                                </td>
+                                                <?php if ($transaksi && $transaksi['status'] == 'belum_bayar'): ?>
+                                                    <a href="<?= base_url('transaksi/' . $p['id_peminjaman']) ?>"
+                                                        class="btn btn-sm btn-danger">
+                                                        Bayar
+                                                    </a>
+                                                <?php else: ?>
+                                                    <a href="<?= base_url('pengiriman/sampai/' . $p['id_peminjaman']) ?>"
+                                                        class="btn btn-sm btn-primary">
+                                                        Sampai
+                                                    </a>
+                                                <?php endif; ?>
 
-                            </tr>
+                                            <?php endif; ?>
+
+                                            <!-- PENGEMBALIAN -->
+                                            <?php if (
+                                                session()->get('role') == 'admin' &&
+                                                $p['status'] == 'dipinjam'
+                                            ): ?>
+                                                <a href="<?= base_url('pengembalian/create/' . $p['id_peminjaman']) ?>"
+                                                    class="btn btn-sm btn-secondary">
+                                                    Kembali
+                                                </a>
+                                            <?php endif; ?>
+
+                                            <!-- HAPUS -->
+                                            <?php if (session()->get('role') == 'admin'): ?>
+                                                <a href="<?= base_url('peminjaman/delete/' . $p['id_peminjaman']) ?>"
+                                                    onclick="return confirm('Yakin ingin menghapus data ini?')"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </a>
+                                            <?php endif; ?>
+
+                                        </div>
+                                    </td>
+
+                                </tr>
                             <?php endforeach; ?>
 
                         <?php else: ?>
